@@ -120,11 +120,14 @@ public class QTabView extends RelativeLayout {
 
     public void updateIndicatorOffsetAndSize(int left){
 
+        int d = (int) (pageWidth * 0.5);
         float offset = left % pageWidth;
         int index = left / pageWidth;
-        if (offset == 0){
-            selectedIndex = index;
-            adapter.notifyDataSetChanged();
+        if (offset < d){
+            adapter.selectItem(index);
+        }
+        else if (offset > pageWidth - d){
+            adapter.selectItem(index + 1);
         }
 
         int l = 0;
@@ -185,6 +188,7 @@ public class QTabView extends RelativeLayout {
     private class RecyclerViewAdapter extends RecyclerView.Adapter<QViewHolder>  {
 
         private Map<Integer, ViewSize> offsets = new HashMap<>();
+        private Map<Integer, QViewHolder> viewHolders = new HashMap<>();
 
         @Override
         public QViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -196,6 +200,7 @@ public class QTabView extends RelativeLayout {
         @Override
         public void onBindViewHolder(final QViewHolder viewHolder, final int i) {
 
+            viewHolders.put(i, viewHolder);
             viewHolder.tv.setText(titles.get(i));
 
             viewHolder.rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -228,12 +233,23 @@ public class QTabView extends RelativeLayout {
             viewHolder.rootView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    deselectItem(selectedIndex);
                     selectedIndex = i;
                     if (onClickTabListener != null){
                         onClickTabListener.onClickTabAt(selectedIndex);
                     }
                 }
             });
+        }
+
+        public void selectItem(int index){
+            viewHolders.get(selectedIndex).tv.setTextColor(titleColor);
+            viewHolders.get(index).tv.setTextColor(selectedTitleColor);
+            selectedIndex = index;
+        }
+
+        public void deselectItem(int index){
+            viewHolders.get(index).tv.setTextColor(titleColor);
         }
 
         @Override
