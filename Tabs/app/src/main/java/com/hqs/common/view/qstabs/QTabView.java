@@ -202,18 +202,16 @@ public class QTabView extends RelativeLayout {
                 @Override
                 public void onGlobalLayout() {
 
+                    int left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;
+                    int right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;
                     if (i == selectedIndex){
-                        indicatorView.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft();
-                        indicatorView.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft();
-                        indicatorView.offset = 0;
+                        indicatorView.left = left;
+                        indicatorView.right = right;
                         indicatorView.invalidate();
-
-                        Log.print(viewHolder.tv.getLeft() + viewHolder.rootView.getLeft());
-                        Log.print(viewHolder.tv.getRight() + viewHolder.rootView.getLeft());
                     }
                     ViewSize size = new ViewSize();
-                    size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft();
-                    size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft();
+                    size.left = left;
+                    size.right = right;
                     offsets.put(i, size);
 
                 }
