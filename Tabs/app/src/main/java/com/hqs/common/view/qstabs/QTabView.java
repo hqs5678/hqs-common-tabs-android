@@ -121,6 +121,7 @@ public class QTabView extends RelativeLayout {
     public void updateIndicatorOffsetAndSize(int left){
 
         int d = (int) (pageWidth * 0.5);
+        int time = 60;
         float offset = left % pageWidth;
         int index = left / pageWidth;
         if (offset < d){
@@ -160,7 +161,7 @@ public class QTabView extends RelativeLayout {
                     int sx = recyclerView.sx;
                     int ll = l1 - sx;
                     int s = (int) (ll + w * 0.5 - d);
-                    step = (int) (s / ((1 - t) * 100));
+                    step = (int) (s / ((1 - t) * time));
 
                     int ss = (int) (l1 + w * 0.5 - (sx + d));
                     if (step > ss && s > 0){
@@ -194,7 +195,7 @@ public class QTabView extends RelativeLayout {
 
                     int w = r1 - l1;
                     int s = (int) (ll + w * 0.5 - d);
-                    step = (int) (s / (t * 100));
+                    step = (int) (s / (t * time));
 
                     int ss = (int) (l1 + w * 0.5 - (sx + d));
                     if (step < ss && s < 0){
@@ -203,8 +204,6 @@ public class QTabView extends RelativeLayout {
                 }
             }
 
-
-            Log.print(step);
             if (step != 0){
                 recyclerView.scrollBy(step, 0);
             }

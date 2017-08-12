@@ -1,5 +1,6 @@
 package com.hqs.common.view.qstabs;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -77,7 +78,12 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < titles.size(); i++){
             MyFragment fragment = new MyFragment();
             fragment.setPosition(i);
-            fragment.setBgColor(ColorUtil.randomColor());
+            if (i % 2 == 0){
+                fragment.setBgColor(Color.LTGRAY);
+            }
+            else{
+                fragment.setBgColor(Color.argb(23, 23, 23, 23));
+            }
             fragments.add(fragment);
         }
 
