@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.hqs.common.utils.ActivityUtil;
 import com.hqs.common.utils.ColorUtil;
 import com.hqs.common.utils.DensityUtils;
-import com.hqs.common.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         tabView.setTitles(titles);
 
         fragments = new ArrayList<>();
-        for (int i = 0; i < 20; i++){
+        for (int i = 0; i < titles.size(); i++){
             MyFragment fragment = new MyFragment();
             fragment.setPosition(i);
             fragment.setBgColor(ColorUtil.randomColor());

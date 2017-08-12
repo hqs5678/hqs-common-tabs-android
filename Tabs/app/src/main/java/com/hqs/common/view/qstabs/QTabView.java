@@ -133,7 +133,7 @@ public class QTabView extends RelativeLayout {
 
         if (left > preLeft){
             // 左滑
-            if (index > titles.size() - 1){
+            if (index >= titles.size() - 1){
                 return;
             }
 
@@ -204,12 +204,15 @@ public class QTabView extends RelativeLayout {
 
                     if (i == selectedIndex){
                         indicatorView.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft();
-                        indicatorView.right = viewHolder.tv.getWidth() + indicatorView.left;
+                        indicatorView.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft();
+                        indicatorView.offset = 0;
                         indicatorView.invalidate();
+
+                        Log.print(viewHolder.tv.getLeft() + viewHolder.rootView.getLeft());
+                        Log.print(viewHolder.tv.getRight() + viewHolder.rootView.getLeft());
                     }
                     ViewSize size = new ViewSize();
                     size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft();
-                    size.width = viewHolder.tv.getWidth();
                     size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft();
                     offsets.put(i, size);
 
@@ -281,7 +284,6 @@ public class QTabView extends RelativeLayout {
     private class ViewSize {
         int left;
         int right;
-        int width;
     }
 
     private class QRecyclerView extends RecyclerView {
