@@ -125,14 +125,14 @@ public class QTabView extends RelativeLayout {
         float offset = left % pageWidth;
         int index = left / pageWidth;
 
-//        if (clickActionCalled) {
-//            if (index != selectedIndex && offset != 0){
-//                return;
-//            }
-//            else{
-//                clickActionCalled = false;
-//            }
-//        }
+        if (clickActionCalled) {
+            if (index == selectedIndex && offset == 0){
+                clickActionCalled = false;
+            }
+            else{
+                return;
+            }
+        }
 
         int d = (int) (pageWidth * 0.5);
         if (offset < d){
@@ -228,7 +228,6 @@ public class QTabView extends RelativeLayout {
                 else if (step < -maxStep){
                     step = -maxStep;
                 }
-                Log.print(step);
                 recyclerView.scrollBy(step, 0);
             }
 
