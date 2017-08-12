@@ -43,6 +43,7 @@ public class QTabView extends RelativeLayout {
     private IndicatorView indicatorView;
     private RecyclerViewAdapter adapter;
     private int preLeft = 0;
+    private boolean clickActionCalled = false;
 
     public QTabView(Context context) {
         super(context);
@@ -121,14 +122,19 @@ public class QTabView extends RelativeLayout {
 
     public void updateIndicatorOffsetAndSize(int left, boolean isOnTouching){
 
-        int d = (int) (pageWidth * 0.5);
-        int time = 30;
-        if (isOnTouching){
-            time = 100;
-        }
-        int maxStep = DensityUtils.dp2px(getContext(), 8);
         float offset = left % pageWidth;
         int index = left / pageWidth;
+
+//        if (clickActionCalled) {
+//            if (index != selectedIndex && offset != 0){
+//                return;
+//            }
+//            else{
+//                clickActionCalled = false;
+//            }
+//        }
+
+        int d = (int) (pageWidth * 0.5);
         if (offset < d){
             adapter.selectItem(index);
         }
@@ -136,8 +142,14 @@ public class QTabView extends RelativeLayout {
             adapter.selectItem(index + 1);
         }
 
-        int l = 0;
-        int r = 0;
+        int time = 30;
+        if (isOnTouching){
+            time = 100;
+        }
+        int maxStep = DensityUtils.dp2px(getContext(), 8);
+
+        int l;
+        int r;
         float t = offset / pageWidth;
 
         try {
@@ -286,6 +298,7 @@ public class QTabView extends RelativeLayout {
                     selectedIndex = i;
                     if (onClickTabListener != null){
                         onClickTabListener.onClickTabAt(selectedIndex);
+                        clickActionCalled = true;
                     }
                 }
             });

@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private QTabView tabView;
 
     private ArrayList<MyFragment> fragments;
+    private ArrayList<String> titles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (TestViewPager) findViewById(R.id.viewPager);
         tabView = (QTabView) findViewById(R.id.tabView);
 
-        ArrayList<String> titles = new ArrayList<>();
+
         titles.add("热点");
         titles.add("新闻");
         titles.add("美文");
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++){
             MyFragment fragment = new MyFragment();
-            fragment.setPosition(i);
+            fragment.title = titles.get(i);
             if (i % 2 == 0){
                 fragment.setBgColor(Color.LTGRAY);
             }
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MyFragment extends Fragment {
 
-        private int position = 0;
+        private String title = "";
         private int bgColor = 0;
 
         @Nullable
@@ -131,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             RelativeLayout relativeLayout = new RelativeLayout(getContext());
             TextView tv = new TextView(getContext());
-            tv.setText(position + "");
-            tv.setTextSize(DensityUtils.dp2px(getContext(), 30));
+            tv.setText(title);
+            tv.setTextSize(DensityUtils.dp2px(getContext(), 20));
             relativeLayout.addView(tv);
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tv.getLayoutParams();
@@ -142,10 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
             relativeLayout.setBackgroundColor(bgColor);
             return relativeLayout;
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
         }
 
         public void setBgColor(int color){
