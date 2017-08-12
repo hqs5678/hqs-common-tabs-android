@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hqs.common.utils.DensityUtils;
 import com.hqs.common.utils.Log;
 import com.hqs.common.utils.ScreenUtils;
 
@@ -101,6 +102,7 @@ public class QTabView extends RelativeLayout {
 
     public void setIndicatorColor(int indicatorColor) {
         this.indicatorColor = indicatorColor;
+        indicatorView.paint.setColor(indicatorColor);
     }
 
     public void setTitlePadding(int titlePadding) {
@@ -122,6 +124,7 @@ public class QTabView extends RelativeLayout {
 
         int d = (int) (pageWidth * 0.5);
         int time = 60;
+        int maxStep = DensityUtils.dp2px(getContext(), 8);
         float offset = left % pageWidth;
         int index = left / pageWidth;
         if (offset < d){
@@ -205,6 +208,13 @@ public class QTabView extends RelativeLayout {
             }
 
             if (step != 0){
+                if (step > maxStep){
+                    step = maxStep;
+                }
+                else if (step < -maxStep){
+                    step = -maxStep;
+                }
+                Log.print(step);
                 recyclerView.scrollBy(step, 0);
             }
 

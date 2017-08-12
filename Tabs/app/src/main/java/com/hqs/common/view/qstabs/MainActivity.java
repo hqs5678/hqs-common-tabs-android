@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
             fragments.add(fragment);
         }
 
+        tabView.setSelectedTitleColor(Color.GRAY);
+        tabView.setIndicatorColor(Color.LTGRAY);
+        tabView.setTitleColor(Color.LTGRAY);
+
         viewPager.setAdapter(adapter);
 
         viewPager.setScrollListener(new TestViewPager.ScrollListener() {
