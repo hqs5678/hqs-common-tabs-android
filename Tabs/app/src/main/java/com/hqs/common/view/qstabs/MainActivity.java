@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hqs.common.utils.ActivityUtil;
-import com.hqs.common.utils.ColorUtil;
 import com.hqs.common.utils.DensityUtils;
 
 import java.util.ArrayList;
@@ -73,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
         titles.add("两性");
 
         tabView.setTitles(titles);
+        tabView.setSelectedTitleColor(Color.GRAY);
+        tabView.setIndicatorColor(Color.LTGRAY);
+        tabView.setTitleColor(Color.LTGRAY);
+
 
         fragments = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++){
@@ -87,9 +90,6 @@ public class MainActivity extends AppCompatActivity {
             fragments.add(fragment);
         }
 
-        tabView.setSelectedTitleColor(Color.GRAY);
-        tabView.setIndicatorColor(Color.LTGRAY);
-        tabView.setTitleColor(Color.LTGRAY);
 
         viewPager.setAdapter(adapter);
 
