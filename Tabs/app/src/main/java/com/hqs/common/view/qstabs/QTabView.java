@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hqs.common.utils.Log;
+import com.hqs.common.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,10 +34,11 @@ public class QTabView extends RelativeLayout {
     private int indicatorColor = Color.RED;
     private int selectedIndex = 0;
     private int titleColor = Color.BLACK;
-    private RecyclerView recyclerView;
+    private QRecyclerView recyclerView;
     private int indicatorHeight = 10;
     private int titlePadding = 50;
-
+    private OnClickTabListener onClickTabListener;
+    private int pageWidth = 100;
     private IndicatorView indicatorView;
     private RecyclerViewAdapter adapter;
 
@@ -51,7 +53,9 @@ public class QTabView extends RelativeLayout {
     }
 
     private void init(){
-        this.recyclerView = new RecyclerView(getContext());
+        pageWidth = (int) ScreenUtils.screenW(getContext());
+
+        this.recyclerView = new QRecyclerView(getContext());
         this.addView(recyclerView);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         recyclerView.setLayoutParams(layoutParams);
@@ -67,6 +71,13 @@ public class QTabView extends RelativeLayout {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         layout.setOrientation(LinearLayout.HORIZONTAL);
         recyclerView.setLayoutManager(layout);
+
+        recyclerView.setOnScrolledListener(new OnScrolledListener() {
+            @Override
+            public void onScrolled(int sx) {
+                updateIndicatorOffset(sx);
+            }
+        });
 
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
@@ -96,34 +107,45 @@ public class QTabView extends RelativeLayout {
         this.titlePadding = titlePadding;
     }
 
+    public void setOnClickTabListener(OnClickTabListener onClickTabListener) {
+        this.onClickTabListener = onClickTabListener;
+    }
+
     private int preLeft = 0;
 
-    public void updateIndicatorOffset(int left, int pageWidth){
+    private void updateIndicatorOffset(int sx){
+        indicatorView.offset = sx;
+        indicatorView.invalidate();
+    }
+
+    public void updateIndicatorOffsetAndSize(int left){
 
         float offset = left % pageWidth;
+        int index = left / pageWidth;
         if (offset == 0){
-            selectedIndex = left / pageWidth;
+            selectedIndex = index;
             adapter.notifyDataSetChanged();
         }
+
         int l = 0;
         int r = 0;
         float t = offset / pageWidth;
 
         if (left > preLeft){
-            // 右滑
-            if (selectedIndex > titles.size() - 1){
+            // 左滑
+            if (index > titles.size() - 1){
                 return;
             }
 
-            l = adapter.offsets.get(selectedIndex).left;
-            float s1 = adapter.offsets.get(selectedIndex + 1).left - l;
+            l = adapter.offsets.get(index).left;
+            float s1 = adapter.offsets.get(index + 1).left - l;
             float a1 = s1 * 2;
             l += 0.5 * a1 * t * t;
 
-            int r1 = adapter.offsets.get(selectedIndex).right;
+            int r1 = adapter.offsets.get(index).right;
 
             // 计算右边需要伸展的位置
-            r = adapter.offsets.get(selectedIndex + 1).right;
+            r = adapter.offsets.get(index + 1).right;
             int s = r - r1;
             float a = s * 2;
             s = (int) (a * t - 0.5 * a * t * t);
@@ -131,21 +153,22 @@ public class QTabView extends RelativeLayout {
 
         }
         else{
-            // 左滑
-            if (selectedIndex < 1){
+            // 右滑
+            index += 1;
+            if (index < 1){
                 return;
             }
 
-            l = adapter.offsets.get(selectedIndex).left;
-            float s1 = l - adapter.offsets.get(selectedIndex - 1).left;
+            l = adapter.offsets.get(index).left;
+            float s1 = l - adapter.offsets.get(index - 1).left;
             float a1 = s1 * 2;
             float t1 = 1 - t;
             l -= a1 * t1 - 0.5 * a1 * t1 * t1;
 
 
             // 计算右边需要伸展的位置
-            r = adapter.offsets.get(selectedIndex).right;
-            float s = r - adapter.offsets.get(selectedIndex - 1).right ;
+            r = adapter.offsets.get(index).right;
+            float s = r - adapter.offsets.get(index - 1).right ;
             float a = s * 2;
             r -= 0.5 * a * t1 * t1;
         }
@@ -155,6 +178,8 @@ public class QTabView extends RelativeLayout {
         indicatorView.invalidate();
 
         preLeft = left;
+
+
     }
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<QViewHolder>  {
@@ -203,7 +228,9 @@ public class QTabView extends RelativeLayout {
                 @Override
                 public void onClick(View view) {
                     selectedIndex = i;
-                    notifyDataSetChanged();
+                    if (onClickTabListener != null){
+                        onClickTabListener.onClickTabAt(selectedIndex);
+                    }
                 }
             });
         }
@@ -235,6 +262,7 @@ public class QTabView extends RelativeLayout {
         private int left = 0;
         private int right = 100;
         private Paint paint;
+        private int offset = 0;
 
         public IndicatorView(Context context) {
             super(context);
@@ -246,8 +274,7 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
-
-            canvas.drawRect(left, 0, right, indicatorHeight, paint);
+            canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
 
@@ -255,6 +282,39 @@ public class QTabView extends RelativeLayout {
         int left;
         int right;
         int width;
+    }
+
+    private class QRecyclerView extends RecyclerView {
+
+        private int sx = 0;
+        private OnScrolledListener onScrolledListener;
+
+
+        public QRecyclerView(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onScrolled(int dx, int dy) {
+            super.onScrolled(dx, dy);
+
+            sx += dx;
+            if (onScrolledListener != null){
+                onScrolledListener.onScrolled(sx);
+            }
+        }
+
+        public void setOnScrolledListener(OnScrolledListener onScrolledListener) {
+            this.onScrolledListener = onScrolledListener;
+        }
+    }
+
+    private interface OnScrolledListener {
+        void onScrolled(int sx);
+    }
+
+    public interface OnClickTabListener {
+        void onClickTabAt(int index);
     }
 
 }

@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         titles.add("美女");
         titles.add("美男");
         titles.add("夕阳红");
+        titles.add("少年派");
+        titles.add("大学生");
+        titles.add("孩子");
+        titles.add("两性");
 
         tabView.setTitles(titles);
 
@@ -57,25 +61,34 @@ public class MainActivity extends AppCompatActivity {
             fragments.add(fragment);
         }
 
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                return fragments.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
-        });
+        viewPager.setAdapter(adapter);
 
         viewPager.setScrollListener(new TestViewPager.ScrollListener() {
             @Override
             public void onScrollChanged(int left) {
-                tabView.updateIndicatorOffset(left, (int) ScreenUtils.screenW(MainActivity.this));
+                tabView.updateIndicatorOffsetAndSize(left);
+            }
+        });
+
+        tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
+            @Override
+            public void onClickTabAt(int index) {
+                viewPager.setCurrentItem(index);
             }
         });
     }
+
+    FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+    };
 
 
     public static class MyFragment extends Fragment {
