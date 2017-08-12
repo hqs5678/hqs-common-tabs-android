@@ -141,20 +141,17 @@ public class QTabView extends RelativeLayout {
                     return;
                 }
 
-                l = adapter.offsets.get(index).left;
-                float s1 = adapter.offsets.get(index + 1).left - l;
+                int l0 = adapter.offsets.get(index).left;
+                int l1 = adapter.offsets.get(index + 1).left;
+                float s0 = l1 - l0;
+                float a0 = s0 * 2;
+                l = (int) (l0 + 0.5 * a0 * t * t);
+
+                int r0 = adapter.offsets.get(index).right;
+                int r1 = adapter.offsets.get(index + 1).right;
+                float s1 = r1 - r0;
                 float a1 = s1 * 2;
-                l += 0.5 * a1 * t * t;
-
-                int r1 = adapter.offsets.get(index).right;
-
-                // 计算右边需要伸展的位置
-                r = adapter.offsets.get(index + 1).right;
-                int s = r - r1;
-                float a = s * 2;
-                s = (int) (a * t - 0.5 * a * t * t);
-                r = r1 + s;
-
+                r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
             }
             else{
                 // 右滑
@@ -163,18 +160,18 @@ public class QTabView extends RelativeLayout {
                     return;
                 }
 
-                l = adapter.offsets.get(index).left;
-                float s1 = l - adapter.offsets.get(index - 1).left;
-                float a1 = s1 * 2;
+                int l0 = adapter.offsets.get(index).left;
+                int l1 = adapter.offsets.get(index - 1).left;
+                float s0 = l0 - l1;
+                float a0 = s0 * 2;
                 float t1 = 1 - t;
-                l -= a1 * t1 - 0.5 * a1 * t1 * t1;
+                l = (int) (l0 - (a0 * t1 - 0.5 * a0 * t1 * t1));
 
-
-                // 计算右边需要伸展的位置
-                r = adapter.offsets.get(index).right;
-                float s = r - adapter.offsets.get(index - 1).right ;
-                float a = s * 2;
-                r -= 0.5 * a * t1 * t1;
+                int r0 = adapter.offsets.get(index).right;
+                int r1 = adapter.offsets.get(index - 1).right;
+                float s1 = r0 - r1;
+                float a1 = s1 * 2;
+                r = (int) (r0 - 0.5 * a1 * t1 * t1);
             }
 
             indicatorView.left = l;
