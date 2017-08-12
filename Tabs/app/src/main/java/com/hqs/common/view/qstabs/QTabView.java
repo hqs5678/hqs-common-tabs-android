@@ -135,6 +135,7 @@ public class QTabView extends RelativeLayout {
         float t = offset / pageWidth;
 
         try {
+            int step = 0;
             if (left > preLeft){
                 // 左滑
                 if (index >= titles.size() - 1){
@@ -152,6 +153,20 @@ public class QTabView extends RelativeLayout {
                 float s1 = r1 - r0;
                 float a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
+
+                if (l1 > d && offset != 0){
+
+                    int w = r1 - l1;
+                    int sx = recyclerView.sx;
+                    int ll = l1 - sx;
+                    int s = (int) (ll + w * 0.5 - d);
+                    step = (int) (s / ((1 - t) * 100));
+
+                    int ss = (int) (l1 + w * 0.5 - (sx + d));
+                    if (step > ss && s > 0){
+                        step = ss;
+                    }
+                }
             }
             else{
                 // 右滑
@@ -172,11 +187,34 @@ public class QTabView extends RelativeLayout {
                 float s1 = r0 - r1;
                 float a1 = s1 * 2;
                 r = (int) (r0 - 0.5 * a1 * t1 * t1);
+
+                int sx = recyclerView.sx;
+                int ll = l1 - sx;
+                if (ll < d){
+
+                    int w = r1 - l1;
+                    int s = (int) (ll + w * 0.5 - d);
+                    step = (int) (s / (t * 100));
+
+                    int ss = (int) (l1 + w * 0.5 - (sx + d));
+                    if (step < ss && s < 0){
+                        step = ss;
+                    }
+                }
             }
+
+
+            Log.print(step);
+            if (step != 0){
+                recyclerView.scrollBy(step, 0);
+            }
+
 
             indicatorView.left = l;
             indicatorView.right = r;
             indicatorView.invalidate();
+
+
         } catch (Exception e) {
         }
 

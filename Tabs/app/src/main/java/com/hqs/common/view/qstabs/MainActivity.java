@@ -48,6 +48,28 @@ public class MainActivity extends AppCompatActivity {
         titles.add("大学生");
         titles.add("孩子");
         titles.add("两性");
+        titles.add("新闻");
+        titles.add("美文");
+        titles.add("时尚潮流");
+        titles.add("学生党");
+        titles.add("美女");
+        titles.add("美男");
+        titles.add("夕阳红");
+        titles.add("少年派");
+        titles.add("大学生");
+        titles.add("孩子");
+        titles.add("两性");
+        titles.add("新闻");
+        titles.add("美文");
+        titles.add("时尚潮流");
+        titles.add("学生党");
+        titles.add("美女");
+        titles.add("美男");
+        titles.add("夕阳红");
+        titles.add("少年派");
+        titles.add("大学生");
+        titles.add("孩子");
+        titles.add("两性");
 
         tabView.setTitles(titles);
 
