@@ -120,10 +120,13 @@ public class QTabView extends RelativeLayout {
         indicatorView.invalidate();
     }
 
-    public void updateIndicatorOffsetAndSize(int left){
+    public void updateIndicatorOffsetAndSize(int left, boolean isOnTouching){
 
         int d = (int) (pageWidth * 0.5);
-        int time = 60;
+        int time = 30;
+        if (isOnTouching){
+            time = 100;
+        }
         int maxStep = DensityUtils.dp2px(getContext(), 8);
         float offset = left % pageWidth;
         int index = left / pageWidth;

@@ -3,6 +3,7 @@ package com.hqs.common.view.qstabs;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import com.hqs.common.utils.Log;
 
@@ -13,6 +14,7 @@ import com.hqs.common.utils.Log;
 public class TestViewPager extends ViewPager {
 
     private ScrollListener scrollListener;
+    private boolean isOnTouching = false;
 
     public TestViewPager(Context context) {
         super(context);
@@ -31,11 +33,22 @@ public class TestViewPager extends ViewPager {
         super.onScrollChanged(l, t, oldl, oldt);
 
         if (scrollListener != null){
-            scrollListener.onScrollChanged(l);
+            scrollListener.onScrollChanged(l, isOnTouching);
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_MOVE){
+            isOnTouching = true;
+        }
+        else {
+            isOnTouching = false;
+        }
+        return super.onTouchEvent(ev);
+    }
+
     public interface ScrollListener{
-        void onScrollChanged(int left);
+        void onScrollChanged(int left, boolean isOnTouching);
     }
 }

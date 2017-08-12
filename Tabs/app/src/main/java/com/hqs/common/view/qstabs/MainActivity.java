@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setScrollListener(new TestViewPager.ScrollListener() {
             @Override
-            public void onScrollChanged(int left) {
-                tabView.updateIndicatorOffsetAndSize(left);
+            public void onScrollChanged(int left, boolean isOnTouching) {
+                tabView.updateIndicatorOffsetAndSize(left, isOnTouching);
             }
         });
 
