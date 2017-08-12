@@ -42,6 +42,7 @@ public class QTabView extends RelativeLayout {
     private int pageWidth = 100;
     private IndicatorView indicatorView;
     private RecyclerViewAdapter adapter;
+    private int preLeft = 0;
 
     public QTabView(Context context) {
         super(context);
@@ -112,8 +113,6 @@ public class QTabView extends RelativeLayout {
     public void setOnClickTabListener(OnClickTabListener onClickTabListener) {
         this.onClickTabListener = onClickTabListener;
     }
-
-    private int preLeft = 0;
 
     private void updateIndicatorOffset(int sx){
         indicatorView.offset = sx;
