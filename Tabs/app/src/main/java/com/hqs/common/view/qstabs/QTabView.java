@@ -134,51 +134,54 @@ public class QTabView extends RelativeLayout {
         int r = 0;
         float t = offset / pageWidth;
 
-        if (left > preLeft){
-            // 左滑
-            if (index >= titles.size() - 1){
-                return;
+        try {
+            if (left > preLeft){
+                // 左滑
+                if (index >= titles.size() - 1){
+                    return;
+                }
+
+                l = adapter.offsets.get(index).left;
+                float s1 = adapter.offsets.get(index + 1).left - l;
+                float a1 = s1 * 2;
+                l += 0.5 * a1 * t * t;
+
+                int r1 = adapter.offsets.get(index).right;
+
+                // 计算右边需要伸展的位置
+                r = adapter.offsets.get(index + 1).right;
+                int s = r - r1;
+                float a = s * 2;
+                s = (int) (a * t - 0.5 * a * t * t);
+                r = r1 + s;
+
+            }
+            else{
+                // 右滑
+                index += 1;
+                if (index < 1){
+                    return;
+                }
+
+                l = adapter.offsets.get(index).left;
+                float s1 = l - adapter.offsets.get(index - 1).left;
+                float a1 = s1 * 2;
+                float t1 = 1 - t;
+                l -= a1 * t1 - 0.5 * a1 * t1 * t1;
+
+
+                // 计算右边需要伸展的位置
+                r = adapter.offsets.get(index).right;
+                float s = r - adapter.offsets.get(index - 1).right ;
+                float a = s * 2;
+                r -= 0.5 * a * t1 * t1;
             }
 
-            l = adapter.offsets.get(index).left;
-            float s1 = adapter.offsets.get(index + 1).left - l;
-            float a1 = s1 * 2;
-            l += 0.5 * a1 * t * t;
-
-            int r1 = adapter.offsets.get(index).right;
-
-            // 计算右边需要伸展的位置
-            r = adapter.offsets.get(index + 1).right;
-            int s = r - r1;
-            float a = s * 2;
-            s = (int) (a * t - 0.5 * a * t * t);
-            r = r1 + s;
-
+            indicatorView.left = l;
+            indicatorView.right = r;
+            indicatorView.invalidate();
+        } catch (Exception e) {
         }
-        else{
-            // 右滑
-            index += 1;
-            if (index < 1){
-                return;
-            }
-
-            l = adapter.offsets.get(index).left;
-            float s1 = l - adapter.offsets.get(index - 1).left;
-            float a1 = s1 * 2;
-            float t1 = 1 - t;
-            l -= a1 * t1 - 0.5 * a1 * t1 * t1;
-
-
-            // 计算右边需要伸展的位置
-            r = adapter.offsets.get(index).right;
-            float s = r - adapter.offsets.get(index - 1).right ;
-            float a = s * 2;
-            r -= 0.5 * a * t1 * t1;
-        }
-
-        indicatorView.left = l;
-        indicatorView.right = r;
-        indicatorView.invalidate();
 
         preLeft = left;
 
