@@ -8,9 +8,9 @@
     <com.hqs.common.view.qstabs.QTabView
         android:id="@+id/tabView"
         android:layout_width="match_parent"
-        android:layout_height="70dp" />
+        android:layout_height="60dp" />
 
-    <android.support.v4.view.ViewPager
+    <com.hqs.common.view.qstabs.TestViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

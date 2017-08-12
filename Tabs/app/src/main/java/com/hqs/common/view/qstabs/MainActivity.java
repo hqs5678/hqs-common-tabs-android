@@ -12,15 +12,17 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hqs.common.utils.ActivityUtil;
 import com.hqs.common.utils.ColorUtil;
 import com.hqs.common.utils.DensityUtils;
+import com.hqs.common.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private ViewPager viewPager;
+    private TestViewPager viewPager;
     private QTabView tabView;
 
     private ArrayList<MyFragment> fragments;
@@ -28,15 +30,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        setContentView(R.layout.activity_main);
+        ActivityUtil.hideActionBar(this);
+
+        viewPager = (TestViewPager) findViewById(R.id.viewPager);
         tabView = (QTabView) findViewById(R.id.tabView);
+
+        ArrayList<String> titles = new ArrayList<>();
+        titles.add("热点");
+        titles.add("新闻");
+        titles.add("美文");
+        titles.add("时尚潮流");
+        titles.add("学生党");
+        titles.add("美女");
+        titles.add("美男");
+        titles.add("夕阳红");
+
+        tabView.setTitles(titles);
 
         fragments = new ArrayList<>();
         for (int i = 0; i < 20; i++){
             MyFragment fragment = new MyFragment();
             fragment.setPosition(i);
+            fragment.setBgColor(ColorUtil.randomColor());
             fragments.add(fragment);
         }
 
@@ -51,12 +68,20 @@ public class MainActivity extends AppCompatActivity {
                 return fragments.size();
             }
         });
+
+        viewPager.setScrollListener(new TestViewPager.ScrollListener() {
+            @Override
+            public void onScrollChanged(int left) {
+                tabView.updateIndicatorOffset(left, (int) ScreenUtils.screenW(MainActivity.this));
+            }
+        });
     }
 
 
     public static class MyFragment extends Fragment {
 
         private int position = 0;
+        private int bgColor = 0;
 
         @Nullable
         @Override
@@ -72,12 +97,16 @@ public class MainActivity extends AppCompatActivity {
 
             tv.setLayoutParams(params);
 
-            relativeLayout.setBackgroundColor(ColorUtil.randomColor());
+            relativeLayout.setBackgroundColor(bgColor);
             return relativeLayout;
         }
 
         public void setPosition(int position) {
             this.position = position;
+        }
+
+        public void setBgColor(int color){
+            this.bgColor = color;
         }
     }
 }
