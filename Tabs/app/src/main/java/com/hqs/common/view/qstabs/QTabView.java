@@ -364,7 +364,6 @@ public class QTabView extends RelativeLayout {
                         return;
                     }
                 }
-                recyclerView.selectedSx = recyclerView.sx;
             }
         }
 
@@ -420,6 +419,7 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
+            Log.print(left - offset);
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
