@@ -279,6 +279,7 @@ public class QTabView extends RelativeLayout {
                     ViewSize size = new ViewSize();
                     size.left = left;
                     size.right = right;
+                    size.sx = recyclerView.sx;
                     offsets.put(i, size);
 
                 }
@@ -300,6 +301,8 @@ public class QTabView extends RelativeLayout {
                         return;
                     }
 
+                    scrollRecyclerViewToCenter(i);
+
                     deselectItem(selectedIndex);
                     selectedIndex = i;
                     if (onClickTabListener != null){
@@ -308,6 +311,54 @@ public class QTabView extends RelativeLayout {
                     }
                 }
             });
+        }
+
+        void scrollRecyclerViewToCenter(int index){
+
+            try {
+                int sx = recyclerView.selectedSx;
+                int left = offsets.get(index).left;
+                int right = offsets.get(index).right;
+                int center = (int) ((right + left) * 0.5);
+                center = center - offsets.get(index).sx + (sx - offsets.get(index).sx);
+                int newSx = (int) (center - pageWidth * 0.5);
+                int d = newSx - sx;
+                Log.print(sx, d);
+                recyclerView.postOnAnimation(new AnimThread(d));
+            } catch (Exception e) {
+            }
+        }
+
+        class AnimThread extends Thread {
+
+            private int d;
+            private int time = 10;
+
+            public AnimThread(int d){
+                this.d = d;
+            }
+
+            @Override
+            public void run() {
+                int step = d / time;
+                if (Math.abs(d) < time && step == 0){
+                    if (d < 0){
+                        step = -1;
+                    }
+                    else{
+                        step = 1;
+                    }
+                }
+                if (step != 0){
+                    recyclerView.scrollBy(step, 0);
+                    d = d - step;
+                    if (d != 0){
+                        recyclerView.postOnAnimationDelayed(new AnimThread(d), 10);
+                        return;
+                    }
+                }
+                recyclerView.selectedSx = recyclerView.sx;
+            }
         }
 
         public void selectItem(int index){
@@ -369,10 +420,12 @@ public class QTabView extends RelativeLayout {
     private class ViewSize {
         int left;
         int right;
+        int sx;
     }
 
     private class QRecyclerView extends RecyclerView {
 
+        private int selectedSx = 0;
         private int sx = 0;
         private OnScrolledListener onScrolledListener;
 
