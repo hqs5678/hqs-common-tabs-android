@@ -311,8 +311,11 @@ public class QTabView extends RelativeLayout {
         }
 
         public void selectItem(int index){
-            viewHolders.get(selectedIndex).tv.setTextColor(titleColor);
-            viewHolders.get(index).tv.setTextColor(selectedTitleColor);
+            try {
+                viewHolders.get(selectedIndex).tv.setTextColor(titleColor);
+                viewHolders.get(index).tv.setTextColor(selectedTitleColor);
+            } catch (Exception e) {
+            }
             selectedIndex = index;
         }
 

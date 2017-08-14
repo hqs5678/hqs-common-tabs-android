@@ -10,10 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
-    <com.hqs.common.view.qstabs.TestViewPager
-        android:id="@+id/viewPager"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+
+        <com.hqs.common.view.qstabs.TestViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorAccent"/>
+    </RelativeLayout>
+
+
 
 
 </LinearLayout>
