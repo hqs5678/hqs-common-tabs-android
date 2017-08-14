@@ -126,11 +126,12 @@ public class QTabView extends RelativeLayout {
         int index = left / pageWidth;
 
         if (clickActionCalled) {
-            if (index == selectedIndex && offset == 0){
+            if (index == selectedIndex && offset == 0 && left > preLeft){
                 clickActionCalled = false;
             }
             else{
                 adapter.selectItem(selectedIndex);
+                preLeft = left;
                 return;
             }
         }
