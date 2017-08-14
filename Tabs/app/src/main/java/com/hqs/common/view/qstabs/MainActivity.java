@@ -14,13 +14,15 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.ActivityUtil;
 import com.hqs.common.utils.DensityUtils;
+import com.hqs.common.view.qtabs.QTabView;
+import com.hqs.common.view.qtabs.QTabViewPager;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private TestViewPager viewPager;
+    private QTabViewPager viewPager;
     private QTabView tabView;
 
     private ArrayList<MyFragment> fragments;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActivityUtil.hideActionBar(this);
 
-        viewPager = (TestViewPager) findViewById(R.id.viewPager);
+        viewPager = (QTabViewPager) findViewById(R.id.viewPager);
         tabView = (QTabView) findViewById(R.id.tabView);
 
 
@@ -94,19 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
 
-        viewPager.setScrollListener(new TestViewPager.ScrollListener() {
-            @Override
-            public void onScrollChanged(int left, boolean isOnTouching) {
-                tabView.updateIndicatorOffsetAndSize(left, isOnTouching);
-            }
-        });
-
         tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
             @Override
             public void onClickTabAt(int index) {
                 viewPager.setCurrentItem(index);
             }
         });
+        tabView.setViewPager(viewPager);
     }
 
     FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {

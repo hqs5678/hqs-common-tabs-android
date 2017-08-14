@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.hqs.common:hqs-common:1.1.20'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    compile project(':qtabs')
 }

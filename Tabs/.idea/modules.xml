@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Tabs.iml" filepath="$PROJECT_DIR$/Tabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qtabs/qtabs.iml" filepath="$PROJECT_DIR$/qtabs/qtabs.iml" />
     </modules>
   </component>
 </project>

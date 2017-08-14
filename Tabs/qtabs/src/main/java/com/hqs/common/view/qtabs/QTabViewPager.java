@@ -1,26 +1,24 @@
-package com.hqs.common.view.qstabs;
+package com.hqs.common.view.qtabs;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.hqs.common.utils.Log;
-
 /**
  * Created by super on 2017/8/11.
  */
 
-public class TestViewPager extends ViewPager {
+public class QTabViewPager extends ViewPager {
 
     private ScrollListener scrollListener;
     private boolean isOnTouching = false;
 
-    public TestViewPager(Context context) {
+    public QTabViewPager(Context context) {
         super(context);
     }
 
-    public TestViewPager(Context context, AttributeSet attrs) {
+    public QTabViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

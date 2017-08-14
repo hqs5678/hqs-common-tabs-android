@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
 
-    <com.hqs.common.view.qstabs.QTabView
+    <com.hqs.common.view.qtabs.QTabView
         android:id="@+id/tabView"
         android:layout_width="match_parent"
         android:layout_height="60dp" />
@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
 
-        <com.hqs.common.view.qstabs.TestViewPager
+        <com.hqs.common.view.qtabs.QTabViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

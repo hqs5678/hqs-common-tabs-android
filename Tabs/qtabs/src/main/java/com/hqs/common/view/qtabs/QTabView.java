@@ -1,4 +1,4 @@
-package com.hqs.common.view.qstabs;
+package com.hqs.common.view.qtabs;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -108,6 +108,16 @@ public class QTabView extends RelativeLayout {
 
     public void setTitlePadding(int titlePadding) {
         this.titlePadding = titlePadding;
+    }
+
+    public void setViewPager(QTabViewPager viewPager) {
+
+        viewPager.setScrollListener(new QTabViewPager.ScrollListener() {
+            @Override
+            public void onScrollChanged(int left, boolean isOnTouching) {
+                updateIndicatorOffsetAndSize(left, isOnTouching);
+            }
+        });
     }
 
     public void setOnClickTabListener(OnClickTabListener onClickTabListener) {
