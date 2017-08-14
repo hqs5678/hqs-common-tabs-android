@@ -130,6 +130,7 @@ public class QTabView extends RelativeLayout {
                 clickActionCalled = false;
             }
             else{
+                adapter.selectItem(selectedIndex);
                 return;
             }
         }
@@ -293,6 +294,11 @@ public class QTabView extends RelativeLayout {
             viewHolder.rootView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    if (selectedIndex == i){
+                        return;
+                    }
+
                     deselectItem(selectedIndex);
                     selectedIndex = i;
                     if (onClickTabListener != null){
