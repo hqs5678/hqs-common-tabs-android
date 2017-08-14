@@ -149,7 +149,7 @@ public class QTabView extends RelativeLayout {
 
         int time = 30;
         if (isOnTouching){
-            time = 100;
+            time = 200;
         }
         int maxStep = DensityUtils.dp2px(getContext(), 8);
 
@@ -232,8 +232,7 @@ public class QTabView extends RelativeLayout {
                 }
                 recyclerView.scrollBy(step, 0);
             }
-
-
+ 
             indicatorView.left = l;
             indicatorView.right = r;
             indicatorView.invalidate();
