@@ -281,7 +281,6 @@ public class QTabView extends RelativeLayout {
                     size.right = right;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
-
                 }
             });
 
@@ -303,6 +302,7 @@ public class QTabView extends RelativeLayout {
 
                     scrollRecyclerViewToCenter(i);
 
+
                     deselectItem(selectedIndex);
                     selectedIndex = i;
                     if (onClickTabListener != null){
@@ -313,20 +313,28 @@ public class QTabView extends RelativeLayout {
             });
         }
 
-        void scrollRecyclerViewToCenter(int index){
+        void scrollRecyclerViewToCenter(final int index){
 
-            try {
-                int sx = recyclerView.selectedSx;
-                int left = offsets.get(index).left;
-                int right = offsets.get(index).right;
-                int center = (int) ((right + left) * 0.5);
-                center = center - offsets.get(index).sx + (sx - offsets.get(index).sx);
-                int newSx = (int) (center - pageWidth * 0.5);
-                int d = newSx - sx;
-                Log.print(sx, d);
-                recyclerView.postOnAnimation(new AnimThread(d));
-            } catch (Exception e) {
-            }
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int sx = recyclerView.sx;
+
+                        int left = offsets.get(index).left;
+                        int right = offsets.get(index).right;
+                        int s = offsets.get(index).sx;
+                        int center = (int) ((right + left) * 0.5);
+                        center = center - s - (sx - s) + sx;
+                        int newSx = (int) (center - pageWidth * 0.5);
+                        int d = newSx - sx;
+
+                        recyclerView.postOnAnimation(new AnimThread(d));
+                    } catch (Exception e) {
+                    }
+                }
+            }, 20);
+
         }
 
         class AnimThread extends Thread {
