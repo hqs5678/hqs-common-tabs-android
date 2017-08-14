@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hqs.common.utils.DensityUtils;
-import com.hqs.common.utils.Log;
 import com.hqs.common.utils.ScreenUtils;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class QTabView extends RelativeLayout {
     private int selectedIndex = 0;
     private int titleColor = Color.BLACK;
     private QRecyclerView recyclerView;
-    private int indicatorHeight = 50;
+    private int indicatorHeight = 10;
     private int titlePadding = 50;
     private OnClickTabListener onClickTabListener;
     private int pageWidth = 100;
@@ -147,7 +146,7 @@ public class QTabView extends RelativeLayout {
             adapter.selectItem(index + 1);
         }
 
-        int time = 50;
+        int time = 60;
         if (isOnTouching){
             time = 200;
         }
@@ -419,7 +418,6 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
-            Log.print(left - offset);
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
