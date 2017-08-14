@@ -36,7 +36,7 @@ public class QTabView extends RelativeLayout {
     private int selectedIndex = 0;
     private int titleColor = Color.BLACK;
     private QRecyclerView recyclerView;
-    private int indicatorHeight = 10;
+    private int indicatorHeight = 50;
     private int titlePadding = 50;
     private OnClickTabListener onClickTabListener;
     private int pageWidth = 100;
@@ -147,7 +147,7 @@ public class QTabView extends RelativeLayout {
             adapter.selectItem(index + 1);
         }
 
-        int time = 30;
+        int time = 50;
         if (isOnTouching){
             time = 200;
         }
@@ -432,7 +432,6 @@ public class QTabView extends RelativeLayout {
 
     private class QRecyclerView extends RecyclerView {
 
-        private int selectedSx = 0;
         private int sx = 0;
         private OnScrolledListener onScrolledListener;
 
