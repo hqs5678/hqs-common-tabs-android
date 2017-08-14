@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++){
             MyFragment fragment = new MyFragment();
-            fragment.title = titles.get(i);
+            fragment.title = titles.get(i) + "-" + i;
             if (i % 2 == 0){
                 fragment.setBgColor(Color.LTGRAY);
             }

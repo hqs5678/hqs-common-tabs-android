@@ -126,8 +126,11 @@ public class QTabView extends RelativeLayout {
         int index = left / pageWidth;
 
         if (clickActionCalled) {
-            if (index == selectedIndex && offset == 0 && left > preLeft){
+            if (index == selectedIndex && offset == 0){
                 clickActionCalled = false;
+                if (left < preLeft) {
+                    return;
+                }
             }
             else{
                 adapter.selectItem(selectedIndex);
@@ -210,16 +213,13 @@ public class QTabView extends RelativeLayout {
 
                 int sx = recyclerView.sx;
                 int ll = l1 - sx;
-                if (ll < d){
+                int w = r1 - l1;
+                int s = (int) (ll + w * 0.5 - d);
+                step = (int) (s / (t * time));
 
-                    int w = r1 - l1;
-                    int s = (int) (ll + w * 0.5 - d);
-                    step = (int) (s / (t * time));
-
-                    int ss = (int) (l1 + w * 0.5 - (sx + d));
-                    if (step < ss && s < 0){
-                        step = ss;
-                    }
+                int ss = (int) (l1 + w * 0.5 - (sx + d));
+                if (step < ss && s < 0){
+                    step = ss;
                 }
             }
 
