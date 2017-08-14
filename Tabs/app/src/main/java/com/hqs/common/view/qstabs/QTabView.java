@@ -340,7 +340,7 @@ public class QTabView extends RelativeLayout {
         class AnimThread extends Thread {
 
             private int d;
-            private int time = 10;
+            private int time = 6;
 
             public AnimThread(int d){
                 this.d = d;
