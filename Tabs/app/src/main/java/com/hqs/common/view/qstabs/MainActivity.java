@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.ActivityUtil;
 import com.hqs.common.utils.DensityUtils;
-import com.hqs.common.utils.Log;
 import com.hqs.common.view.qtabs.QTabView;
 import com.hqs.common.view.qtabs.QTabViewPager;
 
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Log.print("getitem " + position);
             return fragments.get(position);
         }
 

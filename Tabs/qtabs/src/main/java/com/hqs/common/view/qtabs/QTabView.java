@@ -87,8 +87,6 @@ public class QTabView extends RelativeLayout {
 
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
-
-        Log.print(selectedIndex);
     }
 
     public void setTitles(ArrayList<String> titles) {
@@ -269,6 +267,9 @@ public class QTabView extends RelativeLayout {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("q_tab_view", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("q_tab_view_selected_index", selectedIndex);
+        editor.putInt("q_tab_view_sx", recyclerView.sx);
+        editor.putInt("q_tab_view_indicator_left", indicatorView.left);
+        editor.putInt("q_tab_view_indicator_right", indicatorView.right);
         editor.commit();
         return super.onSaveInstanceState();
     }
@@ -284,8 +285,38 @@ public class QTabView extends RelativeLayout {
             selectedIndex = index;
             startLeft = selectedIndex * pageWidth;
         }
+        int left = sharedPreferences.getInt("q_tab_view_indicator_left", 0);
+        int right = sharedPreferences.getInt("q_tab_view_indicator_right", 0);
+        indicatorView.left = left;
+        indicatorView.right = right;
+        int sx = sharedPreferences.getInt("q_tab_view_sx", 0);
+        updateRecyclerView(sx);
 
         super.onRestoreInstanceState(state);
+    }
+
+    private void updateRecyclerView(final int sx){
+        if (sx > 0){
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.scrollBy(sx, 0);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            int offset = recyclerView.sx - sx;
+                            indicatorView.left += offset;
+                            indicatorView.right += offset;
+                            indicatorView.offset += offset;
+                            Log.print(indicatorView.left);
+                            Log.print(indicatorView.right);
+                            indicatorView.invalidate();
+
+                        }
+                    }, 100);
+                }
+            }, 200);
+        }
     }
 
 
