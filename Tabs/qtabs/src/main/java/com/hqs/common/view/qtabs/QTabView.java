@@ -308,9 +308,8 @@ public class QTabView extends RelativeLayout {
                             indicatorView.left += offset;
                             indicatorView.right += offset;
                             indicatorView.offset += offset;
-                            Log.print(indicatorView.left);
-                            Log.print(indicatorView.right);
-                            indicatorView.invalidate();
+//                            indicatorView.invalidate();
+
 
                         }
                     }, 100);
@@ -496,6 +495,12 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
+
+            Log.print(left);
+            Log.print(right);
+            Log.print(offset);
+            Log.print("----");
+
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
