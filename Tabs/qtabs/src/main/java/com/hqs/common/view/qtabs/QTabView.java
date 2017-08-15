@@ -1,6 +1,7 @@
 package com.hqs.common.view.qtabs;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,8 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hqs.common.utils.DensityUtils;
-import com.hqs.common.utils.ScreenUtils;
+import com.hqs.common.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ public class QTabView extends RelativeLayout {
     private RecyclerViewAdapter adapter;
     private int preLeft = 0;
     private boolean clickActionCalled = false;
+    private float density = 0;
 
     public QTabView(Context context) {
         super(context);
@@ -55,7 +56,8 @@ public class QTabView extends RelativeLayout {
     }
 
     private void init(){
-        pageWidth = (int) ScreenUtils.screenW(getContext());
+        density = getResources().getDisplayMetrics().density;
+        pageWidth = getResources().getDisplayMetrics().widthPixels;
 
         this.recyclerView = new QRecyclerView(getContext());
         this.addView(recyclerView);
@@ -160,7 +162,8 @@ public class QTabView extends RelativeLayout {
         if (isOnTouching){
             time = 200;
         }
-        int maxStep = DensityUtils.dp2px(getContext(), 8);
+
+        int maxStep = (int) (density * 8);
 
         int l;
         int r;

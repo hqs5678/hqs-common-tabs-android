@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.ActivityUtil;
 import com.hqs.common.utils.DensityUtils;
+import com.hqs.common.utils.Log;
 import com.hqs.common.view.qtabs.QTabView;
 import com.hqs.common.view.qtabs.QTabViewPager;
 
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (QTabViewPager) findViewById(R.id.viewPager);
         tabView = (QTabView) findViewById(R.id.tabView);
-
 
         titles.add("热点");
         titles.add("新闻");
@@ -93,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
             fragments.add(fragment);
         }
 
-
+        TestFragmentPagerAdapter adapter = new TestFragmentPagerAdapter(getSupportFragmentManager());
+        adapter.fragments = fragments;
         viewPager.setAdapter(adapter);
 
         tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
@@ -103,11 +105,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         tabView.setViewPager(viewPager);
+
     }
 
-    FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+    public class TestFragmentPagerAdapter extends FragmentPagerAdapter {
+
+        private ArrayList<MyFragment> fragments;
+
+        public TestFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
         @Override
         public Fragment getItem(int position) {
+            Log.print("getitem " + position);
             return fragments.get(position);
         }
 
@@ -126,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
             RelativeLayout relativeLayout = new RelativeLayout(getContext());
             TextView tv = new TextView(getContext());
-            tv.setText(title);
+            tv.setText(this.title);
             tv.setTextSize(DensityUtils.dp2px(getContext(), 20));
             relativeLayout.addView(tv);
 
@@ -141,8 +154,14 @@ public class MainActivity extends AppCompatActivity {
             return relativeLayout;
         }
 
+
         public void setBgColor(int color){
             this.bgColor = color;
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
         }
     }
 }
