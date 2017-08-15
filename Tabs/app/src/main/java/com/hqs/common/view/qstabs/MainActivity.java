@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+            setRetainInstance(true);
             RelativeLayout relativeLayout = new RelativeLayout(getContext());
             TextView tv = new TextView(getContext());
             tv.setText(this.title);

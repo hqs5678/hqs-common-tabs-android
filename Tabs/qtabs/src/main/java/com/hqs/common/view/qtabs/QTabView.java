@@ -1,14 +1,18 @@
 package com.hqs.common.view.qtabs;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.AbsSavedState;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hqs.common.utils.Log;
+import com.hqs.common.utils.SharedPreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +90,8 @@ public class QTabView extends RelativeLayout {
 
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
+
+        Log.print(selectedIndex);
     }
 
     public void setTitles(ArrayList<String> titles) {
@@ -135,6 +142,9 @@ public class QTabView extends RelativeLayout {
 
         float offset = left % pageWidth;
         int index = left / pageWidth;
+        if (offset < 0){
+            offset += pageWidth;
+        }
 
         if (clickActionCalled) {
             if (index == selectedIndex && offset == 0){
@@ -254,9 +264,31 @@ public class QTabView extends RelativeLayout {
         }
 
         preLeft = left;
-
-
     }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("q_tab_view", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("q_tab_view_selected_index", selectedIndex);
+        editor.commit();
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("q_tab_view", Context.MODE_PRIVATE);
+
+        int index = sharedPreferences.getInt("q_tab_view_selected_index", 0);
+        if (index != selectedIndex){
+            adapter.selectItem(index);
+            adapter.deselectItem(selectedIndex);
+            selectedIndex = index;
+        }
+
+        super.onRestoreInstanceState(state);
+    }
+
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<QViewHolder>  {
 
@@ -389,7 +421,10 @@ public class QTabView extends RelativeLayout {
         }
 
         public void deselectItem(int index){
-            viewHolders.get(index).tv.setTextColor(titleColor);
+            try {
+                viewHolders.get(index).tv.setTextColor(titleColor);
+            } catch (Exception e) {
+            }
         }
 
         @Override
