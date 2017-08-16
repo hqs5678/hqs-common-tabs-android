@@ -166,8 +166,6 @@ public class QTabView extends RelativeLayout {
             time = 200;
         }
 
-        int maxStep = (int) (density * 80);
-
         int l;
         int r;
         float t = offset / pageWidth;
@@ -239,12 +237,6 @@ public class QTabView extends RelativeLayout {
             }
 
             if (step != 0){
-//                if (step > maxStep){
-//                    step = maxStep;
-//                }
-//                else if (step < -maxStep){
-//                    step = -maxStep;
-//                }
                 recyclerView.scrollBy(step, 0);
             }
  
