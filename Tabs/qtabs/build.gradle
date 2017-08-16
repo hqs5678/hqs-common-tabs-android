@@ -28,6 +28,7 @@ android {
 
 dependencies {
     provided 'com.android.support:recyclerview-v7:+'
+    compile 'com.hqs.common:hqs-common:1.1.20'
 }
 
 
