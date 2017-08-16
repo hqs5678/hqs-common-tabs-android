@@ -20,13 +20,9 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by super on 2017/8/11.
@@ -50,6 +46,7 @@ public class QTabView extends RelativeLayout {
     private boolean clickActionCalled = false;
     private float density = 0;
     private int startLeft = 0;
+    private Map<Integer, ViewSize> offsets = new HashMap<>();
 
     public QTabView(Context context) {
         super(context);
@@ -183,14 +180,14 @@ public class QTabView extends RelativeLayout {
                     return;
                 }
 
-                int l0 = adapter.offsets.get(index).left;
-                int l1 = adapter.offsets.get(index + 1).left;
+                int l0 = offsets.get(index).left;
+                int l1 = offsets.get(index + 1).left;
                 float s0 = l1 - l0;
                 float a0 = s0 * 2;
                 l = (int) (l0 + 0.5 * a0 * t * t);
 
-                int r0 = adapter.offsets.get(index).right;
-                int r1 = adapter.offsets.get(index + 1).right;
+                int r0 = offsets.get(index).right;
+                int r1 = offsets.get(index + 1).right;
                 float s1 = r1 - r0;
                 float a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
@@ -216,15 +213,15 @@ public class QTabView extends RelativeLayout {
                     return;
                 }
 
-                int l0 = adapter.offsets.get(index).left;
-                int l1 = adapter.offsets.get(index - 1).left;
+                int l0 = offsets.get(index).left;
+                int l1 = offsets.get(index - 1).left;
                 float s0 = l0 - l1;
                 float a0 = s0 * 2;
                 float t1 = 1 - t;
                 l = (int) (l0 - (a0 * t1 - 0.5 * a0 * t1 * t1));
 
-                int r0 = adapter.offsets.get(index).right;
-                int r1 = adapter.offsets.get(index - 1).right;
+                int r0 = offsets.get(index).right;
+                int r1 = offsets.get(index - 1).right;
                 float s1 = r0 - r1;
                 float a1 = s1 * 2;
                 r = (int) (r0 - 0.5 * a1 * t1 * t1);
@@ -309,7 +306,6 @@ public class QTabView extends RelativeLayout {
 
     private class RecyclerViewAdapter extends RecyclerView.Adapter<QViewHolder>  {
 
-        private Map<Integer, ViewSize> offsets = new HashMap<>();
         private Map<Integer, QViewHolder> viewHolders = new HashMap<>();
 
         @Override
@@ -324,27 +320,7 @@ public class QTabView extends RelativeLayout {
 
             viewHolders.put(i, viewHolder);
             viewHolder.tv.setText(titles.get(i));
-
-            viewHolder.rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-
-                    int left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;
-                    int right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;
-                    if (i == selectedIndex){
-                        indicatorView.left = left;
-                        indicatorView.right = right;
-                        indicatorView.invalidate();
-                    }
-                    ViewSize size = new ViewSize();
-                    size.left = left;
-                    size.right = right;
-                    size.sx = recyclerView.sx;
-                    offsets.put(i, size);
-
-                    Log.print("-------" + i + "  " + size);
-                }
-            });
+            viewHolder.i = i;
 
             postDelayed(new Runnable() {
                 @Override
@@ -474,12 +450,34 @@ public class QTabView extends RelativeLayout {
 
         private View rootView;
         private TextView tv;
+        private int i = 0;
 
         public QViewHolder(View itemView) {
             super(itemView);
             this.rootView = itemView;
             tv = itemView.findViewById(R.id.title);
             rootView.setPadding(titlePadding, 0, titlePadding, 0);
+
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+
+                    int left = tv.getLeft() + rootView.getLeft() + recyclerView.sx;
+                    int right = tv.getRight() + rootView.getLeft() + recyclerView.sx;
+                    if (i == selectedIndex){
+                        indicatorView.left = left;
+                        indicatorView.right = right;
+                        indicatorView.invalidate();
+                    }
+                    ViewSize size = new ViewSize();
+                    size.left = left;
+                    size.right = right;
+                    size.sx = recyclerView.sx;
+                    offsets.put(i, size);
+
+                    Log.print("-------" + i + "  " + size);
+                }
+            });
         }
     }
 
@@ -500,16 +498,10 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
-//
-//            Log.print(left);
-//            Log.print(right);
-//            Log.print(offset);
-//            Log.print("----");
-
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
-    
+
     private class ViewSize {
         int left;
         int right;
