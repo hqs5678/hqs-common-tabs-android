@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+            // fragment 支持横竖屏切换
             setRetainInstance(true);
             RelativeLayout relativeLayout = new RelativeLayout(getContext());
             TextView tv = new TextView(getContext());
