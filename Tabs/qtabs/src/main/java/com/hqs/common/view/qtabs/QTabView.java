@@ -138,10 +138,6 @@ public class QTabView extends RelativeLayout {
         left += startLeft;
         float offset = left % pageWidth;
         int index = left / pageWidth;
-        if (offset < 0){
-            offset += pageWidth;
-        }
-
         if (clickActionCalled) {
             if (index == selectedIndex && offset == 0){
                 clickActionCalled = false;
