@@ -272,8 +272,8 @@ public class QTabView extends RelativeLayout {
         editor.putInt("q_tab_view_selected_index", selectedIndex);
         editor.putInt("q_tab_view_indicator_left", indicatorView.left);
         editor.putInt("q_tab_view_indicator_right", indicatorView.right);
-        editor.putInt("q_tab_view_page_cur_tab_left", adapter.viewHolders.get(selectedIndex).rootView.getLeft() + recyclerView.sx);
-        editor.putInt("q_tab_view_page_cur_tab_width", adapter.viewHolders.get(selectedIndex).rootView.getWidth());
+        editor.putInt("q_tab_view_page_cur_tab_left", offsets.get(selectedIndex).left);
+        editor.putInt("q_tab_view_page_cur_tab_width", offsets.get(selectedIndex).right - offsets.get(selectedIndex).left);
         editor.commit();
         return super.onSaveInstanceState();
     }
