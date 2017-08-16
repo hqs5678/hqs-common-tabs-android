@@ -30,9 +30,11 @@ public class QTabView extends RelativeLayout {
 
     private ArrayList<String> titles;
     private int selectedTitleColor = Color.RED;
+    private float selectedTitleFontSize = -1;
     private int indicatorColor = Color.RED;
     private int selectedIndex = 0;
     private int titleColor = Color.BLACK;
+    private float titleFontSize = -1;
     private QRecyclerView recyclerView;
     private int indicatorHeight = 10;
     private int titlePadding = 50;
@@ -91,8 +93,8 @@ public class QTabView extends RelativeLayout {
         this.selectedTitleColor = selectedTitleColor;
     }
 
-    public void setSelectedIndex(int selectedIndex) {
-        this.selectedIndex = selectedIndex;
+    public int getSelectedIndex() {
+        return selectedIndex;
     }
 
     public void setTitleColor(int titleColor) {
@@ -106,6 +108,14 @@ public class QTabView extends RelativeLayout {
 
     public void setTitlePadding(int titlePadding) {
         this.titlePadding = titlePadding;
+    }
+
+    public void setTitleFontSize(float titleFontSize) {
+        this.titleFontSize = titleFontSize;
+    }
+
+    public void setSelectedTitleFontSize(float selectedTitleFontSize) {
+        this.selectedTitleFontSize = selectedTitleFontSize;
     }
 
     public void setViewPager(QTabViewPager viewPager) {
@@ -346,11 +356,10 @@ public class QTabView extends RelativeLayout {
 
 
             if (i == selectedIndex){
-                viewHolder.tv.setTextColor(selectedTitleColor);
-
+                selectItem(i);
             }
             else{
-                viewHolder.tv.setTextColor(titleColor);
+                deselectItem(i);
             }
             viewHolder.rootView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -432,6 +441,15 @@ public class QTabView extends RelativeLayout {
             try {
                 viewHolders.get(selectedIndex).tv.setTextColor(titleColor);
                 viewHolders.get(index).tv.setTextColor(selectedTitleColor);
+
+                if (selectedTitleFontSize > 0){
+                    viewHolders.get(selectedIndex).tv.setTextSize(titleFontSize);
+                }
+                if (titleFontSize > 0){
+                    viewHolders.get(index).tv.setTextSize(selectedTitleFontSize);
+                }
+
+
             } catch (Exception e) {
             }
             selectedIndex = index;
@@ -440,6 +458,7 @@ public class QTabView extends RelativeLayout {
         public void deselectItem(int index){
             try {
                 viewHolders.get(index).tv.setTextColor(titleColor);
+                viewHolders.get(index).tv.setTextSize(titleFontSize);
             } catch (Exception e) {
             }
         }
