@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hqs.common.utils.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
