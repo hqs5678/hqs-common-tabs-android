@@ -166,7 +166,7 @@ public class QTabView extends RelativeLayout {
             time = 200;
         }
 
-        int maxStep = (int) (density * 8);
+        int maxStep = (int) (density * 80);
 
         int l;
         int r;
@@ -239,12 +239,12 @@ public class QTabView extends RelativeLayout {
             }
 
             if (step != 0){
-                if (step > maxStep){
-                    step = maxStep;
-                }
-                else if (step < -maxStep){
-                    step = -maxStep;
-                }
+//                if (step > maxStep){
+//                    step = maxStep;
+//                }
+//                else if (step < -maxStep){
+//                    step = -maxStep;
+//                }
                 recyclerView.scrollBy(step, 0);
             }
  
@@ -474,8 +474,6 @@ public class QTabView extends RelativeLayout {
                     size.right = right;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
-
-                    Log.print("-------" + i + "  " + size);
                 }
             });
         }
