@@ -42,10 +42,6 @@ public class QTabView extends RelativeLayout {
     private int pageWidth = 100;
     private IndicatorView indicatorView;
     private RecyclerViewAdapter adapter;
-    private int preLeft = 0;
-    private boolean clickActionCalled = false;
-    private float density = 0;
-    private int startLeft = 0;
     private Map<Integer, ViewSize> offsets = new HashMap<>();
 
     public QTabView(Context context) {
@@ -59,9 +55,8 @@ public class QTabView extends RelativeLayout {
     }
 
     private void init(){
-        density = getResources().getDisplayMetrics().density;
         pageWidth = getResources().getDisplayMetrics().widthPixels;
-
+        d = (int) (pageWidth * 0.5);
         this.recyclerView = new QRecyclerView(getContext());
         this.addView(recyclerView);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -134,11 +129,35 @@ public class QTabView extends RelativeLayout {
         indicatorView.invalidate();
     }
 
+    private int l;
+    private int r;
+    private int offset;
+    private int index;
+    private int d;
+    private int step;
+    private int l0;
+    private int l1;
+    private int r0;
+    private int r1;
+    private int w;
+    private int s;
+    private int ss;
+    private int ll;
+    private int sx;
+    private float t;
+    private float s0;
+    private float a0;
+    private float s1;
+    private float a1;
+    private int preLeft = 0;
+    private boolean clickActionCalled = false;
+    private int startLeft = 0;
+
     public void updateIndicatorOffsetAndSize(int left, boolean isOnTouching){
 
         left += startLeft;
-        float offset = left % pageWidth;
-        int index = left / pageWidth;
+        offset = left % pageWidth;
+        index = left / pageWidth;
         if (clickActionCalled) {
             if (index == selectedIndex && offset == 0){
                 clickActionCalled = false;
@@ -153,7 +172,6 @@ public class QTabView extends RelativeLayout {
             }
         }
 
-        int d = (int) (pageWidth * 0.5);
         if (offset < d){
             adapter.selectItem(index);
         }
@@ -166,39 +184,37 @@ public class QTabView extends RelativeLayout {
             time = 200;
         }
 
-        int l;
-        int r;
-        float t = offset / pageWidth;
+        t = offset * 1.0f / pageWidth;
 
         try {
-            int step = 0;
+            step = 0;
             if (left > preLeft){
                 // 左滑
                 if (index >= titles.size() - 1){
                     return;
                 }
 
-                int l0 = offsets.get(index).left;
-                int l1 = offsets.get(index + 1).left;
-                float s0 = l1 - l0;
-                float a0 = s0 * 2;
+                l0 = offsets.get(index).left;
+                l1 = offsets.get(index + 1).left;
+                s0 = l1 - l0;
+                a0 = s0 * 2;
                 l = (int) (l0 + 0.5 * a0 * t * t);
 
-                int r0 = offsets.get(index).right;
-                int r1 = offsets.get(index + 1).right;
-                float s1 = r1 - r0;
-                float a1 = s1 * 2;
+                r0 = offsets.get(index).right;
+                r1 = offsets.get(index + 1).right;
+                s1 = r1 - r0;
+                a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
 
                 if (l1 > d && offset != 0){
 
-                    int w = r1 - l1;
-                    int sx = recyclerView.sx;
-                    int ll = l1 - sx;
-                    int s = (int) (ll + w * 0.5 - d);
+                    w = r1 - l1;
+                    sx = recyclerView.sx;
+                    ll = l1 - sx;
+                    s = (int) (ll + w * 0.5 - d);
                     step = (int) (s / ((1 - t) * time));
 
-                    int ss = (int) (l1 + w * 0.5 - (sx + d));
+                    ss = (int) (l1 + w * 0.5 - (sx + d));
                     if (step > ss && s > 0){
                         step = ss;
                     }
@@ -211,26 +227,26 @@ public class QTabView extends RelativeLayout {
                     return;
                 }
 
-                int l0 = offsets.get(index).left;
-                int l1 = offsets.get(index - 1).left;
-                float s0 = l0 - l1;
-                float a0 = s0 * 2;
+                l0 = offsets.get(index).left;
+                l1 = offsets.get(index - 1).left;
+                s0 = l0 - l1;
+                a0 = s0 * 2;
                 float t1 = 1 - t;
                 l = (int) (l0 - (a0 * t1 - 0.5 * a0 * t1 * t1));
 
-                int r0 = offsets.get(index).right;
-                int r1 = offsets.get(index - 1).right;
-                float s1 = r0 - r1;
-                float a1 = s1 * 2;
+                r0 = offsets.get(index).right;
+                r1 = offsets.get(index - 1).right;
+                s1 = r0 - r1;
+                a1 = s1 * 2;
                 r = (int) (r0 - 0.5 * a1 * t1 * t1);
 
-                int sx = recyclerView.sx;
-                int ll = l1 - sx;
-                int w = r1 - l1;
-                int s = (int) (ll + w * 0.5 - d);
+                sx = recyclerView.sx;
+                ll = l1 - sx;
+                w = r1 - l1;
+                s = (int) (ll + w * 0.5 - d);
                 step = (int) (s / (t * time));
 
-                int ss = (int) (l1 + w * 0.5 - (sx + d));
+                ss = (int) (l1 + w * 0.5 - (sx + d));
                 if (step < ss && s < 0){
                     step = ss;
                 }
