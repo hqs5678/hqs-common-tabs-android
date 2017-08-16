@@ -272,9 +272,10 @@ public class QTabView extends RelativeLayout {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("q_tab_view", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("q_tab_view_selected_index", selectedIndex);
-        editor.putInt("q_tab_view_sx", recyclerView.sx);
         editor.putInt("q_tab_view_indicator_left", indicatorView.left);
         editor.putInt("q_tab_view_indicator_right", indicatorView.right);
+        editor.putInt("q_tab_view_page_cur_tab_left", adapter.viewHolders.get(selectedIndex).rootView.getLeft() + recyclerView.sx);
+        editor.putInt("q_tab_view_page_cur_tab_width", adapter.viewHolders.get(selectedIndex).rootView.getWidth());
         editor.commit();
         return super.onSaveInstanceState();
     }
@@ -292,9 +293,12 @@ public class QTabView extends RelativeLayout {
         }
         int left = sharedPreferences.getInt("q_tab_view_indicator_left", 0);
         int right = sharedPreferences.getInt("q_tab_view_indicator_right", 0);
+
         indicatorView.left = left;
         indicatorView.right = right;
-        int sx = sharedPreferences.getInt("q_tab_view_sx", 0);
+        left = sharedPreferences.getInt("q_tab_view_page_cur_tab_left", 0);
+        int tabWidth = sharedPreferences.getInt("q_tab_view_page_cur_tab_width", 0);
+        sx = (int) (left - (pageWidth - tabWidth) * 0.5);
         updateRecyclerView(sx);
 
         super.onRestoreInstanceState(state);
@@ -338,9 +342,6 @@ public class QTabView extends RelativeLayout {
                     size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
-
-                    Log.print("onBindViewHolder " + i);
-                    Log.print(size);
                 }
             }, 10);
 
