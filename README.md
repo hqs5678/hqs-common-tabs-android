@@ -1,6 +1,6 @@
 # QTabView
 
-Android 标签控件， 效果与半糖主页的标签也类似。
+Android 标签控件， 效果与半糖主页的标签页类似。
 
 ##### 运行效果图
 ![运行效果图](https://github.com/hqs5678/hqs-common-tabs/blob/master/2017-08-16%2015_48_16.gif)
