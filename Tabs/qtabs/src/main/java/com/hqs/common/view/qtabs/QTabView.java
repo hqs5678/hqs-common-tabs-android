@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hqs.common.utils.Log;
+
+import java.security.AlgorithmConstraints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -198,6 +201,9 @@ public class QTabView extends RelativeLayout {
 
         try {
             step = 0;
+
+            sx = recyclerView.sx;
+
             if (left > preLeft){
                 // 左滑
                 if (index >= titles.size() - 1){
@@ -216,18 +222,12 @@ public class QTabView extends RelativeLayout {
                 a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
 
-                if (l1 > d && offset != 0){
-
-                    w = r1 - l1;
-                    sx = recyclerView.sx;
-                    ll = l1 - sx;
-                    s = (int) (ll + w * 0.5 - d);
-                    step = (int) (s / ((1 - t) * time));
-
-                    ss = (int) (l1 + w * 0.5 - (sx + d));
-                    if (step > ss && s > 0){
-                        step = ss;
-                    }
+                if (offset == 0){
+                    s = (int) (l1 - (pageWidth - w) * 0.5) - sx;
+                } else if (l1 > d && offset != 0){
+                    Log.print(sx);
+                    Log.print(s - sx);
+                    recyclerView.scrollTo((int) (s * t) + sx, 0);
                 }
             }
             else{
@@ -262,9 +262,9 @@ public class QTabView extends RelativeLayout {
                 }
             }
 
-            if (step != 0){
-                recyclerView.scrollBy(step, 0);
-            }
+//            if (step != 0){
+//                recyclerView.scrollBy(step, 0);
+//            }
  
             indicatorView.left = l;
             indicatorView.right = r;
@@ -557,6 +557,12 @@ public class QTabView extends RelativeLayout {
 
         public void setOnScrolledListener(OnScrolledListener onScrolledListener) {
             this.onScrolledListener = onScrolledListener;
+        }
+
+        @Override
+        public void scrollTo(int x, int y) {
+            int offset = x - sx;
+            this.scrollBy(offset, y);
         }
     }
 
