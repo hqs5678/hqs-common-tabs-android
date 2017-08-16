@@ -20,9 +20,13 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by super on 2017/8/11.
@@ -297,20 +301,8 @@ public class QTabView extends RelativeLayout {
                 @Override
                 public void run() {
                     recyclerView.scrollBy(sx, 0);
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            int offset = recyclerView.sx - sx;
-                            indicatorView.left += offset;
-                            indicatorView.right += offset;
-                            indicatorView.offset += offset;
-//                            indicatorView.invalidate();
-
-
-                        }
-                    }, 100);
                 }
-            }, 200);
+            }, 10);
         }
     }
 
@@ -349,8 +341,25 @@ public class QTabView extends RelativeLayout {
                     size.right = right;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
+
+                    Log.print("-------" + i + "  " + size);
                 }
             });
+
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ViewSize size = new ViewSize();
+                    size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;;
+                    size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;;
+                    size.sx = recyclerView.sx;
+                    offsets.put(i, size);
+
+                    Log.print("onBindViewHolder " + i);
+                    Log.print(size);
+                }
+            }, 10);
+
 
 
             if (i == selectedIndex){
@@ -491,20 +500,25 @@ public class QTabView extends RelativeLayout {
         @Override
         public void draw(Canvas canvas) {
             super.draw(canvas);
-
-            Log.print(left);
-            Log.print(right);
-            Log.print(offset);
-            Log.print("----");
+//
+//            Log.print(left);
+//            Log.print(right);
+//            Log.print(offset);
+//            Log.print("----");
 
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
         }
     }
-
+    
     private class ViewSize {
         int left;
         int right;
         int sx;
+
+        @Override
+        public String toString() {
+            return "left: " + left + "  right: " + right + "  sx: " + sx;
+        }
     }
 
     private class QRecyclerView extends RecyclerView {
