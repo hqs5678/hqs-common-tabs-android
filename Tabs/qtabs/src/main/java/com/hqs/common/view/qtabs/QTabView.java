@@ -30,9 +30,8 @@ public class QTabView extends RelativeLayout {
 
     private ArrayList<String> titles;
     private int selectedTitleColor = Color.RED;
-    private float selectedTitleFontSize = -1;
     private int indicatorColor = Color.RED;
-    private int selectedIndex = 0;
+    private int selectedIndex = -1;
     private int titleColor = Color.BLACK;
     private float titleFontSize = -1;
     private QRecyclerView recyclerView;
@@ -83,6 +82,13 @@ public class QTabView extends RelativeLayout {
 
         adapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateIndicatorOffsetAndSize(0, false);
+            }
+        }, 20);
     }
 
     public void setTitles(ArrayList<String> titles) {
@@ -112,10 +118,6 @@ public class QTabView extends RelativeLayout {
 
     public void setTitleFontSize(float titleFontSize) {
         this.titleFontSize = titleFontSize;
-    }
-
-    public void setSelectedTitleFontSize(float selectedTitleFontSize) {
-        this.selectedTitleFontSize = selectedTitleFontSize;
     }
 
     public void setViewPager(QTabViewPager viewPager) {
@@ -174,7 +176,7 @@ public class QTabView extends RelativeLayout {
                 }
             }
             else{
-                adapter.selectItem(selectedIndex);
+                adapter.updateSelectedItem(selectedIndex);
                 preLeft = left;
                 return;
             }
@@ -291,11 +293,10 @@ public class QTabView extends RelativeLayout {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("q_tab_view", Context.MODE_PRIVATE);
-
         int index = sharedPreferences.getInt("q_tab_view_selected_index", 0);
         if (index != selectedIndex){
-            adapter.selectItem(index);
-            adapter.deselectItem(selectedIndex);
+            adapter.updateSelectedItem(index);
+            adapter.updateDeselectedItem(selectedIndex);
             selectedIndex = index;
             startLeft = selectedIndex * pageWidth;
         }
@@ -340,6 +341,9 @@ public class QTabView extends RelativeLayout {
 
             viewHolders.put(i, viewHolder);
             viewHolder.tv.setText(titles.get(i));
+            if (titleFontSize > 0){
+                viewHolder.tv.setTextSize(titleFontSize);
+            }
             viewHolder.i = i;
 
             postDelayed(new Runnable() {
@@ -359,7 +363,7 @@ public class QTabView extends RelativeLayout {
                 selectItem(i);
             }
             else{
-                deselectItem(i);
+                updateDeselectedItem(i);
             }
             viewHolder.rootView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -371,9 +375,7 @@ public class QTabView extends RelativeLayout {
 
                     scrollRecyclerViewToCenter(i);
 
-
-                    deselectItem(selectedIndex);
-                    selectedIndex = i;
+                    selectItem(i);
                     if (onClickTabListener != null){
                         onClickTabListener.onClickTabAt(selectedIndex);
                         clickActionCalled = true;
@@ -437,28 +439,24 @@ public class QTabView extends RelativeLayout {
             }
         }
 
-        public void selectItem(int index){
-            try {
-                viewHolders.get(selectedIndex).tv.setTextColor(titleColor);
-                viewHolders.get(index).tv.setTextColor(selectedTitleColor);
-
-                if (selectedTitleFontSize > 0){
-                    viewHolders.get(selectedIndex).tv.setTextSize(titleFontSize);
-                }
-                if (titleFontSize > 0){
-                    viewHolders.get(index).tv.setTextSize(selectedTitleFontSize);
-                }
-
-
-            } catch (Exception e) {
+        public void selectItem(int i){
+            updateSelectedItem(i);
+            if (i != selectedIndex){
+                updateDeselectedItem(selectedIndex);
             }
-            selectedIndex = index;
+            selectedIndex = i;
         }
 
-        public void deselectItem(int index){
+        public void updateSelectedItem(final int i){
             try {
-                viewHolders.get(index).tv.setTextColor(titleColor);
-                viewHolders.get(index).tv.setTextSize(titleFontSize);
+                viewHolders.get(i).tv.setTextColor(selectedTitleColor);
+            } catch (Exception e) {
+            }
+        }
+
+        public void updateDeselectedItem(int i){
+            try {
+                viewHolders.get(i).tv.setTextColor(titleColor);
             } catch (Exception e) {
             }
         }
