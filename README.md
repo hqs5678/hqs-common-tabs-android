@@ -43,6 +43,9 @@ tabView.setTitleColor(Color.LTGRAY);
  
 // 设置标题的字体大小
 tabView.setTitleFontSize(16);
+
+// 设置标题之间的间距
+tabView.setTitlePadding(20);
   
 // 设置点击标签的事件监听器（必须）
 tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
