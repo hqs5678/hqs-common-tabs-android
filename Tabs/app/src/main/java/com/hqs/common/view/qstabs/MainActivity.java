@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         tabView.setIndicatorColor(Color.LTGRAY);
         tabView.setTitleColor(Color.LTGRAY);
         tabView.setTitleFontSize(16);
+        tabView.setTitlePadding(20);
 
         fragments = new ArrayList<>();
         for (int i = 0; i < titles.size(); i++){
