@@ -144,6 +144,7 @@ public class QTabView extends RelativeLayout {
     private int l;
     private int r;
     private int offset;
+    private int preOffset;
     private int index;
     private int l0;
     private int l1;
@@ -215,6 +216,7 @@ public class QTabView extends RelativeLayout {
         }
 
         preLeft = left;
+        preOffset = offset;
     }
 
     private void updateIndicator(float t, int curIndex, int nextIndex){
@@ -259,6 +261,16 @@ public class QTabView extends RelativeLayout {
     }
 
     private void updateRecyclerViewScroll(float t, int curIndex, int nextIndex){
+
+        Log.print(offset);
+        if (Math.abs(preOffset - offset) > pageWidth * 0.9){
+            leftS = 0;
+            rightSx = 0;
+
+            Log.print("--offset = 0--");
+            return;
+        }
+
         try {
             l0 = offsets.get(curIndex).left;
             l1 = offsets.get(nextIndex).left;
@@ -286,10 +298,6 @@ public class QTabView extends RelativeLayout {
                         leftT = t;
                     }
                 }
-                else{
-                    leftS = 0;
-                    rightSx = 0;
-                }
             }
             else {
                 // 右滑
@@ -309,10 +317,6 @@ public class QTabView extends RelativeLayout {
                         rightSx = recyclerView.sx;
                         rightT = t;
                     }
-                }
-                else{
-                    leftS = 0;
-                    rightSx = 0;
                 }
             }
 
@@ -574,7 +578,6 @@ public class QTabView extends RelativeLayout {
                     size.right = right;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
-                    Log.print(size, i, "----");
                 }
             });
         }
