@@ -220,7 +220,7 @@ public class QTabView extends RelativeLayout {
                 if (s == -1) {
                     s = (int) (l1 - (pageWidth - w) * 0.5);
                 }
-                if (s > recyclerView.sx && offset != 0) {
+                if (offset != 0) {
                     Log.print(scrolledX, (int) ((s - scrolledX) * t) + scrolledX, "--");
                     recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
                 }
