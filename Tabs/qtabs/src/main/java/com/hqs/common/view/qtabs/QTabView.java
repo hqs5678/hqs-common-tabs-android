@@ -58,7 +58,6 @@ public class QTabView extends RelativeLayout {
 
     private void init(){
         pageWidth = getResources().getDisplayMetrics().widthPixels;
-        halfWidth = (int) (pageWidth * 0.5);
         this.recyclerView = new QRecyclerView(getContext());
         this.addView(recyclerView);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -146,7 +145,6 @@ public class QTabView extends RelativeLayout {
     private int r;
     private int offset;
     private int index;
-    private int halfWidth;
     private int l0;
     private int l1;
     private int r0;
