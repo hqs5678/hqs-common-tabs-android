@@ -221,7 +221,7 @@ public class QTabView extends RelativeLayout {
                     s = (int) (l1 - (pageWidth - w) * 0.5);
                 }
                 if (offset != 0) {
-                    Log.print(scrolledX, (int) ((s - scrolledX) * t) + scrolledX, "--");
+                    Log.print((int) ((s - scrolledX) * t) + scrolledX - recyclerView.sx + "--");
                     recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
                 }
             }
@@ -251,6 +251,7 @@ public class QTabView extends RelativeLayout {
                     s = scrolledX - (int) (l1 - (pageWidth - w) * 0.5);
                 }
                 if (offset != 0) {
+                    Log.print((int) (scrolledX - (s * t1)) - recyclerView.sx);
                     recyclerView.scrollTo((int) (scrolledX - (s * t1)), 0);
                 }
             }
@@ -349,7 +350,7 @@ public class QTabView extends RelativeLayout {
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
                 }
-            }, 500);
+            }, 10);
 
 
 
