@@ -173,11 +173,9 @@ public class QTabView extends RelativeLayout {
             if (index == selectedIndex && offset == 0){
                 clickActionCalled = false;
             }
-            else{
-                adapter.updateSelectedItem(selectedIndex);
-                preLeft = left;
-                return;
-            }
+            adapter.updateSelectedItem(selectedIndex);
+            preLeft = left;
+            return;
         }
 
         if (offset < d){
@@ -223,6 +221,7 @@ public class QTabView extends RelativeLayout {
                     s = (int) (l1 - (pageWidth - w) * 0.5);
                 }
                 if (s > recyclerView.sx && offset != 0) {
+                    Log.print(scrolledX, (int) ((s - scrolledX) * t) + scrolledX, "--");
                     recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
                 }
             }
@@ -381,7 +380,7 @@ public class QTabView extends RelativeLayout {
 
         void scrollRecyclerViewToCenter(final int index){
 
-            recyclerView.postDelayed(new Runnable() {
+            postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -395,7 +394,7 @@ public class QTabView extends RelativeLayout {
                         int newSx = (int) (center - pageWidth * 0.5);
                         int d = newSx - sx;
 
-                        recyclerView.postOnAnimation(new AnimThread(d));
+                        postOnAnimation(new AnimThread(d));
                     } catch (Exception e) {
                     }
                 }
@@ -427,8 +426,10 @@ public class QTabView extends RelativeLayout {
                     recyclerView.scrollBy(step, 0);
                     d = d - step;
                     if (d != 0){
-                        recyclerView.postOnAnimationDelayed(new AnimThread(d), 10);
-                        return;
+                        postOnAnimationDelayed(new AnimThread(d), 10);
+                    }
+                    else{
+                        scrolledX = recyclerView.sx;
                     }
                 }
             }
