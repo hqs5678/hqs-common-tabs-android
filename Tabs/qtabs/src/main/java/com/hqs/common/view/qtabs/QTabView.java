@@ -196,27 +196,79 @@ public class QTabView extends RelativeLayout {
             if (left > preLeft){
                 // 左滑
                 if (index >= titles.size() - 1){
-                    if (offset != 0){
-                        return;
-                    }
-                    else{
-                        index -= 1;
-                        t = 1;
-                    }
+                    return;
                 }
+                updateIndicator(t, index, index + 1);
+                updateRecyclerViewScroll(t, index, index + 1);
+            }
+            else {
+                // 右滑
+                index += 1;
+                if (index < 1){
+                    return;
+                }
+                updateIndicator(1 - t, index, index - 1);
+                updateRecyclerViewScroll(t, index, index - 1);
+            }
 
-                l0 = offsets.get(index).left;
-                l1 = offsets.get(index + 1).left;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        preLeft = left;
+    }
+
+    private void updateIndicator(float t, int curIndex, int nextIndex){
+
+        try {
+            l0 = offsets.get(curIndex).left;
+            l1 = offsets.get(nextIndex).left;
+            r0 = offsets.get(curIndex).right;
+            r1 = offsets.get(nextIndex).right;
+
+            if (nextIndex > curIndex){
+                // 左滑
                 s0 = l1 - l0;
                 a0 = s0 * 2;
                 l = (int) (l0 + 0.5 * a0 * t * t);
 
-                r0 = offsets.get(index).right;
-                r1 = offsets.get(index + 1).right;
                 s1 = r1 - r0;
                 a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
+            }
+            else {
+                // 右滑
 
+                s0 = l0 - l1;
+                a0 = s0 * 2;
+                l = (int) (l0 - (a0 * t - 0.5 * a0 * t * t));
+
+                s1 = r0 - r1;
+                a1 = s1 * 2;
+                r = (int) (r0 - 0.5 * a1 * t * t);
+            }
+
+
+            indicatorView.left = l;
+            indicatorView.right = r;
+            indicatorView.invalidate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateRecyclerViewScroll(float t, int curIndex, int nextIndex){
+        try {
+            l0 = offsets.get(curIndex).left;
+            l1 = offsets.get(nextIndex).left;
+            r0 = offsets.get(curIndex).right;
+            r1 = offsets.get(nextIndex).right;
+
+            if (nextIndex > curIndex){
+                // 左滑
                 w = r1 - l1;
 
                 if (rightSx == 0) {
@@ -242,24 +294,6 @@ public class QTabView extends RelativeLayout {
             }
             else {
                 // 右滑
-                index += 1;
-                if (index < 1){
-                    return;
-                }
-
-                l0 = offsets.get(index).left;
-                l1 = offsets.get(index - 1).left;
-                s0 = l0 - l1;
-                a0 = s0 * 2;
-                float t1 = 1 - t;
-                l = (int) (l0 - (a0 * t1 - 0.5 * a0 * t1 * t1));
-
-                r0 = offsets.get(index).right;
-                r1 = offsets.get(index - 1).right;
-                s1 = r0 - r1;
-                a1 = s1 * 2;
-                r = (int) (r0 - 0.5 * a1 * t1 * t1);
-
                 w = r1 - l1;
 
                 if (leftS != 0){
@@ -273,9 +307,9 @@ public class QTabView extends RelativeLayout {
                         recyclerView.scrollTo((int) ((s * t / leftT) + scrolledX), 0);
                     }
                     else{
-                        recyclerView.scrollTo((int) (scrolledX - (s * t1)), 0);
+                        recyclerView.scrollTo((int) (scrolledX - (s * (1 - t))), 0);
                         rightSx = recyclerView.sx;
-                        rightT = t1;
+                        rightT = t;
                     }
                 }
                 else{
@@ -284,16 +318,9 @@ public class QTabView extends RelativeLayout {
                 }
             }
 
- 
-            indicatorView.left = l;
-            indicatorView.right = r;
-            indicatorView.invalidate();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        preLeft = left;
     }
 
     @Override
@@ -373,12 +400,18 @@ public class QTabView extends RelativeLayout {
                         return;
                     }
                     ViewSize size = new ViewSize();
-                    size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;;
-                    size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;;
+                    size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;
+                    size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;
+                    if (size.left < recyclerView.sx){
+                        return;
+                    }
+                    if (size.right < size.left){
+                        return;
+                    }
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
                 }
-            }, 10);
+            }, 200);
 
 
 
@@ -526,7 +559,13 @@ public class QTabView extends RelativeLayout {
                         return;
                     }
                     int left = tv.getLeft() + rootView.getLeft() + recyclerView.sx;
+                    if (left < recyclerView.sx){
+                        return;
+                    }
                     int right = tv.getRight() + rootView.getLeft() + recyclerView.sx;
+                    if (right < left){
+                        return;
+                    }
                     if (i == selectedIndex){
                         indicatorView.left = left;
                         indicatorView.right = right;
@@ -537,6 +576,7 @@ public class QTabView extends RelativeLayout {
                     size.right = right;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
+                    Log.print(size, i, "----");
                 }
             });
         }
