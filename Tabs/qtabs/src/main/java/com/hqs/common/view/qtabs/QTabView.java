@@ -236,6 +236,7 @@ public class QTabView extends RelativeLayout {
                     }
                 }
                 else{
+                    leftS = 0;
                     rightSx = 0;
                 }
             }
@@ -279,6 +280,7 @@ public class QTabView extends RelativeLayout {
                 }
                 else{
                     leftS = 0;
+                    rightSx = 0;
                 }
             }
 
