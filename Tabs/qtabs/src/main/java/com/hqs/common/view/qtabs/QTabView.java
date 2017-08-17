@@ -388,6 +388,16 @@ public class QTabView extends RelativeLayout {
 
                         int left = offsets.get(index).left;
                         int right = offsets.get(index).right;
+
+                        indicatorView.left = left;
+                        indicatorView.right = right;
+                        indicatorView.offset = offsets.get(index).sx;
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                indicatorView.invalidate();
+                            }
+                        });
                         int s = offsets.get(index).sx;
                         int center = (int) ((right + left) * 0.5);
                         center = center - s - (sx - s) + sx;
