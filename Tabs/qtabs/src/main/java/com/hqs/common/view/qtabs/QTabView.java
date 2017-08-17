@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 
 import com.hqs.common.utils.Log;
 
-import java.security.AlgorithmConstraints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class QTabView extends RelativeLayout {
 
     private void init(){
         pageWidth = getResources().getDisplayMetrics().widthPixels;
-        d = (int) (pageWidth * 0.5);
+        halfWidth = (int) (pageWidth * 0.5);
         this.recyclerView = new QRecyclerView(getContext());
         this.addView(recyclerView);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -89,7 +89,7 @@ public class QTabView extends RelativeLayout {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                updateIndicatorOffsetAndSize(0, false);
+                updateIndicatorOffsetAndSize(0);
             }
         }, 20);
     }
@@ -127,8 +127,8 @@ public class QTabView extends RelativeLayout {
 
         viewPager.setScrollListener(new QTabViewPager.ScrollListener() {
             @Override
-            public void onScrollChanged(int left, boolean isOnTouching) {
-                updateIndicatorOffsetAndSize(left, isOnTouching);
+            public void onScrollChanged(int left) {
+                updateIndicatorOffsetAndSize(left);
             }
         });
     }
@@ -146,27 +146,25 @@ public class QTabView extends RelativeLayout {
     private int r;
     private int offset;
     private int index;
-    private int d;
-    private int step;
+    private int halfWidth;
     private int l0;
     private int l1;
     private int r0;
     private int r1;
     private int w;
     private int s;
-    private int ss;
-    private int ll;
-    private int sx;
+    private int scrolledX;
     private float t;
     private float s0;
     private float a0;
     private float s1;
     private float a1;
+    private int d = 200;
     private int preLeft = 0;
     private boolean clickActionCalled = false;
     private int startLeft = 0;
 
-    public void updateIndicatorOffsetAndSize(int left, boolean isOnTouching){
+    public void updateIndicatorOffsetAndSize(int left){
 
         left += startLeft;
         offset = left % pageWidth;
@@ -174,9 +172,6 @@ public class QTabView extends RelativeLayout {
         if (clickActionCalled) {
             if (index == selectedIndex && offset == 0){
                 clickActionCalled = false;
-                if (left < preLeft) {
-                    return;
-                }
             }
             else{
                 adapter.updateSelectedItem(selectedIndex);
@@ -187,27 +182,27 @@ public class QTabView extends RelativeLayout {
 
         if (offset < d){
             adapter.selectItem(index);
+            s = -1;
         }
         else if (offset > pageWidth - d){
             adapter.selectItem(index + 1);
-        }
-
-        int time = 60;
-        if (isOnTouching){
-            time = 200;
+            s = -1;
         }
 
         t = offset * 1.0f / pageWidth;
 
         try {
-            step = 0;
-
-            sx = recyclerView.sx;
 
             if (left > preLeft){
                 // 左滑
                 if (index >= titles.size() - 1){
-                    return;
+                    if (offset != 0){
+                        return;
+                    }
+                    else{
+                        index -= 1;
+                        t = 1;
+                    }
                 }
 
                 l0 = offsets.get(index).left;
@@ -222,15 +217,16 @@ public class QTabView extends RelativeLayout {
                 a1 = s1 * 2;
                 r = (int) (r0 + a1 * t - 0.5 * a1 * t * t);
 
-                if (offset == 0){
-                    s = (int) (l1 - (pageWidth - w) * 0.5) - sx;
-                } else if (l1 > d && offset != 0){
-                    Log.print(sx);
-                    Log.print(s - sx);
-                    recyclerView.scrollTo((int) (s * t) + sx, 0);
+                w = r1 - l1;
+
+                if (s == -1) {
+                    s = (int) (l1 - (pageWidth - w) * 0.5);
+                }
+                if (s > recyclerView.sx && offset != 0) {
+                    recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
                 }
             }
-            else{
+            else {
                 // 右滑
                 index += 1;
                 if (index < 1){
@@ -250,28 +246,23 @@ public class QTabView extends RelativeLayout {
                 a1 = s1 * 2;
                 r = (int) (r0 - 0.5 * a1 * t1 * t1);
 
-                sx = recyclerView.sx;
-                ll = l1 - sx;
                 w = r1 - l1;
-                s = (int) (ll + w * 0.5 - d);
-                step = (int) (s / (t * time));
 
-                ss = (int) (l1 + w * 0.5 - (sx + d));
-                if (step < ss && s < 0){
-                    step = ss;
+                if (s == -1) {
+                    s = scrolledX - (int) (l1 - (pageWidth - w) * 0.5);
+                }
+                if (offset != 0) {
+                    recyclerView.scrollTo((int) (scrolledX - (s * t1)), 0);
                 }
             }
 
-//            if (step != 0){
-//                recyclerView.scrollBy(step, 0);
-//            }
  
             indicatorView.left = l;
             indicatorView.right = r;
             indicatorView.invalidate();
 
-
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         preLeft = left;
@@ -307,8 +298,8 @@ public class QTabView extends RelativeLayout {
         indicatorView.right = right;
         left = sharedPreferences.getInt("q_tab_view_page_cur_tab_left", 0);
         int tabWidth = sharedPreferences.getInt("q_tab_view_page_cur_tab_width", 0);
-        sx = (int) (left - (pageWidth - tabWidth) * 0.5);
-        updateRecyclerView(sx);
+        scrolledX = (int) (left - (pageWidth - tabWidth) * 0.5);
+        updateRecyclerView(scrolledX);
 
         super.onRestoreInstanceState(state);
     }
@@ -349,13 +340,17 @@ public class QTabView extends RelativeLayout {
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+                    if (offsets.containsKey(index)){
+                        return;
+                    }
                     ViewSize size = new ViewSize();
                     size.left = viewHolder.tv.getLeft() + viewHolder.rootView.getLeft() + recyclerView.sx;;
                     size.right = viewHolder.tv.getRight() + viewHolder.rootView.getLeft() + recyclerView.sx;;
                     size.sx = recyclerView.sx;
                     offsets.put(i, size);
                 }
-            }, 10);
+            }, 500);
 
 
 
@@ -486,6 +481,10 @@ public class QTabView extends RelativeLayout {
                 @Override
                 public void onGlobalLayout() {
 
+                    scrolledX = recyclerView.sx;
+                    if (offsets.containsKey(i)){
+                        return;
+                    }
                     int left = tv.getLeft() + rootView.getLeft() + recyclerView.sx;
                     int right = tv.getRight() + rootView.getLeft() + recyclerView.sx;
                     if (i == selectedIndex){
@@ -521,6 +520,12 @@ public class QTabView extends RelativeLayout {
         public void draw(Canvas canvas) {
             super.draw(canvas);
             canvas.drawRect(left - offset, 0, right - offset, indicatorHeight, paint);
+        }
+
+        @Override
+        public String toString() {
+            return "left: " + left + "  right: " + right + "  offset: " + offset + "  getLeft: " + (left - offset)
+                    + "  getRight: " + (right - offset);
         }
     }
 
@@ -563,6 +568,14 @@ public class QTabView extends RelativeLayout {
         public void scrollTo(int x, int y) {
             int offset = x - sx;
             this.scrollBy(offset, y);
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent e) {
+            if (e.getAction() == MotionEvent.ACTION_UP){
+                scrolledX = sx;
+            }
+            return super.onTouchEvent(e);
         }
     }
 

@@ -3,7 +3,6 @@ package com.hqs.common.view.qtabs;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 /**
  * Created by super on 2017/8/11.
@@ -12,7 +11,6 @@ import android.view.MotionEvent;
 public class QTabViewPager extends ViewPager {
 
     private ScrollListener scrollListener;
-    private boolean isOnTouching = false;
 
     public QTabViewPager(Context context) {
         super(context);
@@ -31,22 +29,11 @@ public class QTabViewPager extends ViewPager {
         super.onScrollChanged(l, t, oldl, oldt);
 
         if (scrollListener != null){
-            scrollListener.onScrollChanged(l, isOnTouching);
+            scrollListener.onScrollChanged(l);
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_MOVE){
-            isOnTouching = true;
-        }
-        else {
-            isOnTouching = false;
-        }
-        return super.onTouchEvent(ev);
     }
 
     public interface ScrollListener{
-        void onScrollChanged(int left, boolean isOnTouching);
+        void onScrollChanged(int left);
     }
 }
