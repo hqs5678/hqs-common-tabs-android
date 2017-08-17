@@ -163,6 +163,10 @@ public class QTabView extends RelativeLayout {
     private int preLeft = 0;
     private boolean clickActionCalled = false;
     private int startLeft = 0;
+    private int leftS = 0;
+    private float leftT = 0;
+    private int rightSx = 0;
+    private float rightT = 0;
 
     public void updateIndicatorOffsetAndSize(int left){
 
@@ -180,11 +184,9 @@ public class QTabView extends RelativeLayout {
 
         if (offset < d){
             adapter.selectItem(index);
-            s = -1;
         }
         else if (offset > pageWidth - d){
             adapter.selectItem(index + 1);
-            s = -1;
         }
 
         t = offset * 1.0f / pageWidth;
@@ -217,12 +219,24 @@ public class QTabView extends RelativeLayout {
 
                 w = r1 - l1;
 
-                if (s == -1) {
+                if (rightSx == 0) {
                     s = (int) (l1 - (pageWidth - w) * 0.5);
                 }
+                else{
+                    s = rightSx - scrolledX;
+                }
                 if (offset != 0) {
-                    Log.print((int) ((s - scrolledX) * t) + scrolledX - recyclerView.sx + "--");
-                    recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
+                    if (rightSx != 0){
+                        recyclerView.scrollTo((int) (rightSx - s * (1 - (1 - t) / rightT)), 0);
+                    }
+                    else{
+                        recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
+                        leftS = recyclerView.sx - scrolledX;
+                        leftT = t;
+                    }
+                }
+                else{
+                    rightSx = 0;
                 }
             }
             else {
@@ -247,12 +261,24 @@ public class QTabView extends RelativeLayout {
 
                 w = r1 - l1;
 
-                if (s == -1) {
+                if (leftS != 0){
+                    s = leftS;
+                }
+                else{
                     s = scrolledX - (int) (l1 - (pageWidth - w) * 0.5);
                 }
                 if (offset != 0) {
-                    Log.print((int) (scrolledX - (s * t1)) - recyclerView.sx);
-                    recyclerView.scrollTo((int) (scrolledX - (s * t1)), 0);
+                    if (leftS != 0){
+                        recyclerView.scrollTo((int) ((s * t / leftT) + scrolledX), 0);
+                    }
+                    else{
+                        recyclerView.scrollTo((int) (scrolledX - (s * t1)), 0);
+                        rightSx = recyclerView.sx;
+                        rightT = t1;
+                    }
+                }
+                else{
+                    leftS = 0;
                 }
             }
 
