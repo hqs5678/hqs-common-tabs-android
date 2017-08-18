@@ -27,26 +27,32 @@ public class QTabViewPager extends ViewPager {
     }
 
     @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-
-        if (scrollListener != null){
-            scrollListener.onScrollChanged(l, isOnTouching);
-        }
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_MOVE){
-            isOnTouching = true;
-        }
-        else {
-            isOnTouching = false;
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                isOnTouching = true;
+                break;
+            default:
+                isOnTouching = false;
         }
         return super.onTouchEvent(ev);
     }
 
+    public boolean isOnTouching() {
+        return isOnTouching;
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+
+        if (scrollListener != null){
+            scrollListener.onScrollChanged(l);
+        }
+    }
+
     public interface ScrollListener{
-        void onScrollChanged(int left, boolean isOnTouching);
+        void onScrollChanged(int left);
     }
 }
