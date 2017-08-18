@@ -294,7 +294,7 @@ public class QTabView extends RelativeLayout {
                     }
                     else{
                         recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
-                        if (t < 0.8){
+                        if (t < 0.95){
                             leftS = recyclerView.sx - scrolledX;
                             leftT = t;
                         }
@@ -320,7 +320,7 @@ public class QTabView extends RelativeLayout {
                     }
                     else{
                         recyclerView.scrollTo((int) (scrolledX - (s * t)), 0);
-                        if (t < 0.8){
+                        if (t < 0.95){
                             rightSx = recyclerView.sx;
                             rightT = t;
                         }
