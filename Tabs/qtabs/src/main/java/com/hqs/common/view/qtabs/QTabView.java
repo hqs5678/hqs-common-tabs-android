@@ -262,7 +262,7 @@ public class QTabView extends RelativeLayout {
 
     private void updateRecyclerViewScroll(float t, int curIndex, int nextIndex){
 
-        Log.print(offset);
+//        Log.print(offset);
         if (Math.abs(preOffset - offset) > pageWidth * 0.9){
             leftS = 0;
             rightSx = 0;
@@ -294,8 +294,14 @@ public class QTabView extends RelativeLayout {
                     }
                     else{
                         recyclerView.scrollTo((int) ((s - scrolledX) * t) + scrolledX, 0);
-                        leftS = recyclerView.sx - scrolledX;
-                        leftT = t;
+                        if (t < 0.8){
+                            leftS = recyclerView.sx - scrolledX;
+                            leftT = t;
+                        }
+                        else{
+                            leftS = 0;
+                            rightSx = 0;
+                        }
                     }
                 }
             }
@@ -314,8 +320,14 @@ public class QTabView extends RelativeLayout {
                     }
                     else{
                         recyclerView.scrollTo((int) (scrolledX - (s * t)), 0);
-                        rightSx = recyclerView.sx;
-                        rightT = t;
+                        if (t < 0.8){
+                            rightSx = recyclerView.sx;
+                            rightT = t;
+                        }
+                        else{
+                            rightSx = 0;
+                            leftS = 0;
+                        }
                     }
                 }
             }
