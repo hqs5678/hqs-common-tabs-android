@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         titles.add("两性");
 
         tabView.setTitles(titles);
-        tabView.setSelectedTitleColor(Color.GRAY);
+        tabView.setSelectedTitleColor(Color.LTGRAY);
         tabView.setIndicatorColor(Color.LTGRAY);
         tabView.setTitleColor(Color.LTGRAY);
         tabView.setTitleFontSize(16);
