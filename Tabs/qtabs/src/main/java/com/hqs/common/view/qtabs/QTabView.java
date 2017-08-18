@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hqs.common.utils.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -252,7 +250,6 @@ public class QTabView extends RelativeLayout {
             indicatorView.invalidate();
 
         } catch (Exception e) {
-            Log.print("{", curIndex, nextIndex, "}");
             e.printStackTrace();
         }
 
@@ -677,7 +674,6 @@ public class QTabView extends RelativeLayout {
             super.onScrollStateChanged(state);
             if (state == SCROLL_STATE_IDLE){
                 scrolledX = sx;
-                Log.print("SCROLL_STATE_IDLE");
             }
         }
     }
