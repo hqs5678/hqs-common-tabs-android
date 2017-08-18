@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -45,6 +44,7 @@ public class QTabView extends RelativeLayout {
     private IndicatorView indicatorView;
     private RecyclerViewAdapter adapter;
     private Map<Integer, ViewSize> offsets = new HashMap<>();
+    private QTabViewPager viewPager;
 
     public QTabView(Context context) {
         super(context);
@@ -123,7 +123,7 @@ public class QTabView extends RelativeLayout {
     }
 
     public void setViewPager(QTabViewPager viewPager) {
-
+        this.viewPager = viewPager;
         viewPager.setScrollListener(new QTabViewPager.ScrollListener() {
             @Override
             public void onScrollChanged(int left) {
@@ -265,6 +265,13 @@ public class QTabView extends RelativeLayout {
             rightSx = 0;
             return;
         }
+
+//        if (offset < 200 || offset + 200 > pageWidth){
+//            if (!viewPager.isOnTouching()){
+//                scrolledX = recyclerView.sx;
+//            }
+//        }
+
 
         try {
             l0 = offsets.get(curIndex).left;
@@ -563,7 +570,6 @@ public class QTabView extends RelativeLayout {
                 @Override
                 public void onGlobalLayout() {
 
-                    Log.print("addOnGlobalLayoutListener");
                     scrolledX = recyclerView.sx;
                     int left = tv.getLeft() + rootView.getLeft() + recyclerView.sx;
                     if (left < recyclerView.sx) {
