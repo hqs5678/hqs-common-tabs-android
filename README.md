@@ -58,7 +58,7 @@ tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
 tabView.setViewPager(viewPager);
 ```
 
-#### 以下为简单 Demo，仅为参考。
+#### 以上为核心代码，其他的工作就是设置每页的内容了，可以自行设计。以下为简单 Demo，仅为参考。
 1. activity_main.xml， 简单的demo，您可以根据个人需求编写UI。
 
 ```
