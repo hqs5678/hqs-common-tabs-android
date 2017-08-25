@@ -2,6 +2,8 @@
 
 Android 标签控件， 效果与半糖主页的标签页类似。
 
+Swift 版：https://github.com/hqs5678/qtabs-swift
+
 ##### 运行效果图
 ![运行效果图](https://github.com/hqs5678/hqs-common-tabs/blob/master/2017-08-16%2015_48_16.gif)
 
@@ -14,10 +16,10 @@ Android 标签控件， 效果与半糖主页的标签页类似。
 ### 安装说明
 ### Gradle
 ```
-    compile 'com.hqs.common.view.qtabs:qtabs:1.0.2'
+    compile 'com.hqs.common.view.qtabs:qtabs:1.0.5'
 ```
 
- 
+
 #### 使用方法
 使用QTabViewPager和QTabView 配合使用， 可以实现类似新闻标签页等类似需求的界面。具体代码可以参考如下：
 
@@ -26,7 +28,7 @@ tabView = (QTabView) findViewById(R.id.tabView);
 titles.add("热点");
 titles.add("新闻");
 // ...
- 
+
 // 设置样式
 
 // 设置标题
@@ -40,13 +42,13 @@ tabView.setIndicatorColor(Color.LTGRAY);
 
 // 设置普通标题的颜色
 tabView.setTitleColor(Color.LTGRAY);
- 
+
 // 设置标题的字体大小
 tabView.setTitleFontSize(16);
 
 // 设置标题之间的间距
 tabView.setTitlePadding(20);
-  
+
 // 设置点击标签的事件监听器（必须）
 tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
     @Override
@@ -58,7 +60,7 @@ tabView.setOnClickTabListener(new QTabView.OnClickTabListener() {
 tabView.setViewPager(viewPager);
 ```
 
-#### 以下为简单 Demo，仅为参考。
+#### 以上为核心代码，其他的工作就是设置每页的内容了，可以自行设计。以下为简单 Demo，仅为参考。
 1. activity_main.xml， 简单的demo，您可以根据个人需求编写UI。
 
 ```
@@ -67,7 +69,7 @@ tabView.setViewPager(viewPager);
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
- 
+
     <com.hqs.common.view.qtabs.QTabView
         android:id="@+id/tabView"
         android:layout_width="match_parent"
@@ -76,7 +78,7 @@ tabView.setViewPager(viewPager);
     <com.hqs.common.view.qtabs.QTabViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" /> 
+        android:layout_height="match_parent" />
 
 </LinearLayout>
 
@@ -107,19 +109,19 @@ protected void onCreate(Bundle savedInstanceState) {
     titles.add("大学生");
     titles.add("孩子");
     titles.add("两性");
-     
+
     // 设置标题
     tabView.setTitles(titles);
-    
+
     // 设置选中标题的颜色
     tabView.setSelectedTitleColor(Color.GRAY);
-    
+
     // 设置标题小面的横断线的颜色
     tabView.setIndicatorColor(Color.LTGRAY);
-    
+
     // 设置普通标题的颜色
     tabView.setTitleColor(Color.LTGRAY);
-    
+
     // 设置标题的字体大小
     tabView.setTitleFontSize(16);
 
@@ -197,7 +199,7 @@ public static class MyFragment extends Fragment {
         // fragment 支持横竖屏切换
         // 本示例中必须（fragment的特殊的生命周期所致）
         setRetainInstance(true);
-        
+
         RelativeLayout relativeLayout = new RelativeLayout(getContext());
         TextView tv = new TextView(getContext());
         tv.setText(this.title);

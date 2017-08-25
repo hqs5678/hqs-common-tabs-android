@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = '1.0.3'
-def vc = 10003
+version = '1.0.5'
+def vc = 10005
 
 android {
     compileSdkVersion 26
@@ -28,7 +28,6 @@ android {
 
 dependencies {
     provided 'com.android.support:recyclerview-v7:+'
-    compile 'com.hqs.common:hqs-common:1.1.20'
 }
 
 
